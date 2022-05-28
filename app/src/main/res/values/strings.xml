@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Filiw</string>
+    <string name="title_activity_show_topics">activity_show_topics</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_show_chat">activity_show_chat</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="h_filiw">Η Φιλιώ</string>
+    <string name="plhktrologhste_to_onoma_sas">Πληκτρολογήστε το όνομά σας</string>
+    <string name="onoma_xrhsth">Όνομα χρήστη</string>
+    <string name="synexeia">συνεχεια</string>
+    <string name="to_steki_ths_filiws">Το στέκι της Φιλιώς</string>
+</resources>
