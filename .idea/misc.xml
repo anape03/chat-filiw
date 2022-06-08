@@ -9,6 +9,11 @@
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_show_chat.xml" value="0.2" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_show_topics.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/fragment_activity_show_topics.xml" value="0.23645833333333333" />
+        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_main.xml" value="0.27447916666666666" />
+        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_show_chat.xml" value="0.27447916666666666" />
+        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_show_topics.xml" value="0.27447916666666666" />
+        <entry key="..\:/chat-filiw/app/src/main/res/layout/list_view_item_message.xml" value="0.27447916666666666" />
+        <entry key="..\:/chat-filiw/app/src/main/res/layout/list_view_item_topic.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>
