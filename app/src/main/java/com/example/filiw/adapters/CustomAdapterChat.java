@@ -45,8 +45,8 @@ public class CustomAdapterChat extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.list_view_item_message, null);
 
-        TextView senderName = (TextView)view.findViewById(R.id.show_chat_sender);
-        TextView message = (TextView)view.findViewById(R.id.show_chat_message_sent);
+        TextView senderName = (TextView)view.findViewById(R.id.item_show_chat_sender);
+        TextView message = (TextView)view.findViewById(R.id.item_show_chat_message_sent);
 
         senderName.setText(listSenderNames.get(i));
         message.setText(listMessages.get(i));

@@ -1,23 +1,27 @@
 package com.example.filiw.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.widget.ListView;
-
 import com.example.filiw.R;
 import com.example.filiw.adapters.CustomAdapterTopics;
+import com.example.filiw.adapters.ItemTopic;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class activity_show_topics extends AppCompatActivity {
+    private final static String TOPIC_NAME = "topic_name";
+    private final static String USERNAME = "nameofperson";
+    private static String username = "";
 
     ListView topicList;
-    List<Integer> topicImages = new ArrayList<>();
-    List<String> topicNames = new ArrayList<>();
-    List<String> topicLastMessage = new ArrayList<>();
+    List<ItemTopic> listItemTopic = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,40 +29,65 @@ public class activity_show_topics extends AppCompatActivity {
         setContentView(R.layout.activity_show_topics);
         topicList = (ListView) findViewById(R.id.show_topics_list);
 
+        getData(); // Get necessary values from previous activity
+
         ///////////// For testing purposes
         for (int i=0; i<=10; i++){
-            topicImages.add(R.drawable.filiw_pinei_kafe);
-            topicNames.add("Topic Name Number "+i);
-            topicLastMessage.add("Test Message Number "+i);
+            String topicName = "Topic Name Number "+i;
+            String topicLastMessage = "Test Message very very big let's seeeeeeeeeeee what it do be doing Number "+i;
+            listItemTopic.add(new ItemTopic(topicName, topicLastMessage));
         }
+        listItemTopic.add(new ItemTopic("Topic Name Number 11", "Test Message Number 11"));
         /////////////
 
-        CustomAdapterTopics customAdapterTopics = new CustomAdapterTopics(getApplicationContext(), topicImages, topicNames, topicLastMessage);
+        CustomAdapterTopics customAdapterTopics = new CustomAdapterTopics(getApplicationContext(), listItemTopic/*topicImages, topicNames, topicLastMessage*/);
         topicList.setAdapter(customAdapterTopics);
+
+        topicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+                onSelectedTopic(position);
+            }
+        });
     }
 
-//    private ActivityShowTopicsBinding binding;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        binding = ActivityShowTopicsBinding.inflate(getLayoutInflater());
-//        setContentView(binding.getRoot());
-//
-//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-//        ViewPager viewPager = binding.viewPager;
-//        viewPager.setAdapter(sectionsPagerAdapter);
-//        TabLayout tabs = binding.tabs;
-//        tabs.setupWithViewPager(viewPager);
-//        FloatingActionButton fab = binding.fab;
-//
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//    }
+    /**
+     * Get Values from previous activity
+     */
+    private void getData(){
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null)
+            return;
+        String username = bundle.getString(USERNAME);
+
+        setUsername(username);
+    }
+
+    private void setUsername(String value){
+        username = value;
+    }
+
+    /**
+     * Send Topic Image and Name to next activity
+     */
+    private void onSelectedTopic(int position){
+        String topicName = getTopicName(position);
+
+        Intent intent = new Intent(this, activity_show_chat.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(TOPIC_NAME, topicName);
+        bundle.putString(USERNAME, username);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+    }
+
+    /**
+     * Get Topic Name from screen
+     * @param i for item in position i
+     * @return topic name
+     */
+    public String getTopicName(int i) {
+        return listItemTopic.get(i).getTopicName();
+    }
 }

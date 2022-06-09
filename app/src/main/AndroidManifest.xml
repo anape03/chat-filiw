@@ -11,17 +11,13 @@
         android:theme="@style/Theme.Filiw.Midnight" >
         <activity
             android:name=".activities.activity_show_chat"
-            android:exported="false">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
             android:name=".activities.activity_show_topics"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
 
         <activity

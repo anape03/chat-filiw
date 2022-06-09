@@ -19,4 +19,7 @@
     <string name="synexeia">συνεχεια</string>
     <string name="to_steki_ths_filiws">Το στέκι της Φιλιώς</string>
     <string name="available_conversations_gr">Διαθέσιμες συνομιλίες</string>
+    <string name="go_back_button">Go back button</string>
+    <string name="send_message_button">send message button</string>
+    <string name="insert_file_button">insert file button</string>
 </resources>
