@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.filiw.R;
 import com.example.filiw.adapters.CustomAdapterChat;
 import com.example.filiw.backend.Client;
+import com.example.filiw.backend.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,8 @@ public class activity_show_chat extends AppCompatActivity {
     private static String topicName = "";
 
     ListView chatList;
-    List<String> topicNames = new ArrayList<>();
-    List<String> topicLastMessage = new ArrayList<>();
+    List<String> senderNames = new ArrayList<>();
+    List<String> senderMessage = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +36,16 @@ public class activity_show_chat extends AppCompatActivity {
         chatList = (ListView) findViewById(R.id.show_chat_list);
 
         setTopicValues(); // Set Topic Name and Image
-        //new Client(username, topicName).start(); // Generate client
+        new Client(username, topicName, this).start(); // Generate client
 
         ///////////// For testing purposes
         for (int i=0; i<=10; i++){
-            topicNames.add("Sender Name Number "+i);
-            topicLastMessage.add("Test a big big very big message to see how it handles the thing Message Number "+i);
+            senderNames.add("Sender Name Number "+i);
+            senderMessage.add("Test a big big very big message to see how it handles the thing Message Number "+i);
         }
         /////////////
 
-        CustomAdapterChat customAdapterChat = new CustomAdapterChat(getApplicationContext(), topicNames, topicLastMessage);
+        CustomAdapterChat customAdapterChat = new CustomAdapterChat(getApplicationContext(), senderNames, senderMessage);
         chatList.setAdapter(customAdapterChat);
 
         ImageButton homeButton = findViewById(R.id.show_chat_button_back);
@@ -61,6 +62,35 @@ public class activity_show_chat extends AppCompatActivity {
         sendMessageButton.setOnClickListener(v -> {
             // TODO: send message to broker
         });
+    }
+
+    /**
+     * Consumer receives message from broker
+     * @param messageValue message received
+     */
+    public void receiveMessage(Value messageValue){
+        String sender = getSender(messageValue);
+        String message = getMessage(messageValue);
+        senderNames.add(sender);
+        senderMessage.add(message);
+    }
+
+    /**
+     * Extract sender value from message
+     * @param message message Value object
+     * @return sender name string
+     */
+    private String getSender(Value message){
+        return message.getSenter();
+    }
+
+    /**
+     * Extract message value from message
+     * @param message message Value object
+     * @return message string
+     */
+    private String getMessage(Value message){
+        return message.getMessage();
     }
 
     /**

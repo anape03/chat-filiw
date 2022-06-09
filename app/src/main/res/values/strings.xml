@@ -22,4 +22,5 @@
     <string name="go_back_button">Go back button</string>
     <string name="send_message_button">send message button</string>
     <string name="insert_file_button">insert file button</string>
+    <string name="gallery_button">gallery button</string>
 </resources>

@@ -89,6 +89,7 @@ public class Consumer extends Node {
                     if (!mess.getNotification()){
                         client.writeToFile("[Consumer]: Message received: "+mess, false);
                         System.out.println(mess);
+                        client.getActivity().receiveMessage(mess); // send message to activity
                     }
                 }
             }

@@ -1,5 +1,7 @@
 package com.example.filiw.backend;
 
+import com.example.filiw.activities.activity_show_chat;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -19,11 +21,24 @@ public class Client extends Node {
     public boolean stopthreads = false;
     public boolean Alivesocket= false;
     String desiredTopic = null;
+    activity_show_chat activity;
 
     /**
      * Constructor for Client
      */
-    Client() {
+    public Client() {
+        address = getRandomBroker();
+        id = new Random().nextInt();
+        this.createLogFile("Client"+id+".txt");
+    }
+
+    /**
+     * Constructor for Client
+     */
+    public Client(String username, String topicName, activity_show_chat activity) {
+        this.username = username;
+        this.desiredTopic = topicName;
+        this.activity = activity;
         address = getRandomBroker();
         id = new Random().nextInt();
         this.createLogFile("Client"+id+".txt");
@@ -36,6 +51,7 @@ public class Client extends Node {
     public Socket getSocket(){ return requestSocket; }
     public String getdesiredTopic(){return desiredTopic; }
     public Socket getConnection(){ return requestSocket; }
+    public activity_show_chat getActivity(){ return activity; }
 
     /**
      * Get random broekr address to connect to
@@ -49,9 +65,9 @@ public class Client extends Node {
             
     @Override
     public void run() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Choose a username: ");
-        username = sc.nextLine();
+//        Scanner sc = new Scanner(System.in);
+//        System.out.print("Choose a username: ");
+//        username = sc.nextLine();
         boolean changeBroker = getTopicInfo();
         try {
             if (changeBroker){
@@ -84,9 +100,9 @@ public class Client extends Node {
      *         false if not
      */
     private boolean getTopicInfo(){
-        Scanner sc = new Scanner(System.in);
-        System.out.print("What topic would you like to access? Type Stories to see stories: ");
-        desiredTopic = sc.nextLine().toUpperCase();
+//        Scanner sc = new Scanner(System.in);
+//        System.out.print("What topic would you like to access? Type Stories to see stories: ");
+//        desiredTopic = sc.nextLine().toUpperCase();
         
         try {
             requestSocket = new Socket(address.getIp(), address.getPort());
