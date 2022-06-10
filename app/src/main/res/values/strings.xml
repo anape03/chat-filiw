@@ -23,4 +23,8 @@
     <string name="send_message_button">send message button</string>
     <string name="insert_file_button">insert file button</string>
     <string name="gallery_button">gallery button</string>
+    <string name="trabhxte_fwto">Τραβήξτε\nΦωτογραφία</string>
+    <string name="fwto_apo_mnhmh">Φωτογραφία\nαπό τη μνήμη</string>
+    <string name="Piso">Πίσω</string>
+    <string name="image_to_send">image to send</string>
 </resources>

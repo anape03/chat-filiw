@@ -1,5 +1,8 @@
 package com.example.filiw.backend;
 
+import android.os.Environment;
+
+import java.io.File;
 import java.net.UnknownHostException;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
@@ -76,7 +79,9 @@ public class Consumer extends Node {
                             baos.close();
                         }
                         else{
-                            FileOutputStream fos = new FileOutputStream(chunksOfMess.get(0).message);
+                            String videoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+                            new File(videoPath+"/filiw/data").mkdirs();
+                            FileOutputStream fos = new FileOutputStream(videoPath+"/filiw/data/"+chunksOfMess.get(0).message);
                             for (Value chunk : chunksOfMess) {
                                 fos.write(chunk.multimediaFile.getChunkData());
                             }

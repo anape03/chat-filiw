@@ -1,23 +1,19 @@
 package com.example.filiw.backend;
 
+import android.media.MediaMetadataRetriever;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-//import javax.imageio.ImageIO;
-//import java.awt.image.BufferedImage;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-
-
 
 public class MultimediaFile implements Serializable {
     String multimediaFileName;
     String dateCreated;
     String length;
-    String framerate;
+    String frameRate;
     String frameWidth;
     String frameHeight;
     byte[] multimediaFileChunk;
@@ -40,6 +36,8 @@ public class MultimediaFile implements Serializable {
         if(!extension.equals("STRING")){ // Not Text Message
             File m_file = new File(multimediaFileName);
             Path m_path = Paths.get(multimediaFileName);
+            MediaMetadataRetriever mMR = new MediaMetadataRetriever();
+            mMR.setDataSource(m_file.getPath());
             try {
                 BasicFileAttributes attr = Files.readAttributes(m_path, BasicFileAttributes.class);
                 this.dateCreated = attr.creationTime().toString();
@@ -49,19 +47,13 @@ public class MultimediaFile implements Serializable {
             }
 
             if (extension.equals("mp4")){ // video
-                this.frameWidth = "";
-                this.frameHeight = "";
-                this.framerate = "";
+                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+                this.frameRate = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
             }
             if (extension.equals("jpg") || extension.equals("jpeg")){ // image
-//                BufferedImage img = null;
-//                try {
-//                    img = ImageIO.read(m_file);
-//                    this.frameWidth = Integer.toString(img.getWidth());
-//                    this.frameHeight = Integer.toString(img.getHeight());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_WIDTH);
+                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_HEIGHT);
             }
         }
 
