@@ -1,6 +1,7 @@
 package com.example.filiw.backend;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.net.UnknownHostException;
@@ -28,6 +29,7 @@ public class Consumer extends Node {
         this.client = client;
         try {
             in = new ObjectInputStream(this.client.getSocket().getInputStream());
+            Log.e("CONNECTION","Input Stream created.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,6 +40,7 @@ public class Consumer extends Node {
      * @return message received
      */
     public String register(){
+        Log.e("CONNECTION","Register to broker.");
         try{
             Value response = (Value)in.readObject();
             return response.getMessage(); // message is in form "<change broker: yes/no> <brokernum if needed>"

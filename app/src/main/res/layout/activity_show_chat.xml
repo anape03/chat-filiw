@@ -19,17 +19,15 @@
 
     <ListView
         android:id="@+id/show_chat_list"
-        android:layout_width="413dp"
-        android:layout_height="582dp"
-        android:layout_marginBottom="90dp"
+        android:layout_width="380dp"
+        android:layout_height="545dp"
         android:stackFromBottom="true"
         android:transcriptMode="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_chat_title"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/show_chat_button_back"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/show_chat_write_message"
@@ -70,7 +68,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.017"
+        app:layout_constraintVertical_bias="0.005"
         tools:ignore="RedundantDescriptionCheck" />
 
     <ImageButton

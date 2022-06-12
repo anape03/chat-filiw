@@ -32,9 +32,12 @@ public class activity_show_topics extends AppCompatActivity {
         getData(); // Get necessary values from previous activity
 
         ///////////// For testing purposes
-        for (int i=0; i<=10; i++){
-            String topicName = "Topic Name Number "+i;
-            String topicLastMessage = "Test Message very very big let's seeeeeeeeeeee what it do be doing Number "+i;
+        String topicName = "Topic Name Number 0";
+        String topicLastMessage = "";
+        listItemTopic.add(new ItemTopic(topicName, topicLastMessage));
+        for (int i=1; i<=10; i++){
+            topicName = "Topic Name Number "+i;
+            topicLastMessage = "Test Message very very big let's seeeeeeeeeeee what it do be doing Number "+i;
             listItemTopic.add(new ItemTopic(topicName, topicLastMessage));
         }
         listItemTopic.add(new ItemTopic("Topic Name Number 11", "Test Message Number 11"));
@@ -43,12 +46,8 @@ public class activity_show_topics extends AppCompatActivity {
         CustomAdapterTopics customAdapterTopics = new CustomAdapterTopics(getApplicationContext(), listItemTopic/*topicImages, topicNames, topicLastMessage*/);
         topicList.setAdapter(customAdapterTopics);
 
-        topicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
-                onSelectedTopic(position);
-            }
-        });
+        topicList.setOnItemClickListener((adapterView, view, position, id)
+                -> onSelectedTopic(position));
     }
 
     /**
@@ -56,8 +55,10 @@ public class activity_show_topics extends AppCompatActivity {
      */
     private void getData(){
         Bundle bundle = getIntent().getExtras();
-        if (bundle == null)
+        if (bundle == null){
+//            setUsername("witch"); //-0
             return;
+        }
         String username = bundle.getString(USERNAME);
 
         setUsername(username);
