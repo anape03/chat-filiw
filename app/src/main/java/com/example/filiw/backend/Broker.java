@@ -4,20 +4,17 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
-import android.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 public class Broker extends Node {
-    
-    ArrayList<Pair<Address,Integer>> brokerHash;                // Broker Address - Broker Hash
-    ArrayList<Pair<String,Integer>> topicHash;                  // Topic Name - Topic Hash
-    ArrayList<Pair<Value,LocalDateTime>> topicStories;          // Story (Value object) - Time uploaded
+
+    HashMap<Address,Integer> brokerHash;                // Broker Address - Broker Hash
+    ArrayList<Integer> sortedBrokerHash;                // Sorted Hashes for Brokers
+    HashMap<String,Integer> topicHash;                  // Topic Name - Topic Hash
+    HashMap<Value,LocalDateTime> topicStories;          // Story (Value object) - Time uploaded
     HashMap<String,BrokerActionsForClient> activeClients;       // Username, connection with client 
     HashMap<String,ArrayList<String>> registerdTopicClients;    // Topic and registered Client 
     HashMap<String,ArrayList<Value>> topicHistory;              // Topic name - Topic history
@@ -26,17 +23,25 @@ public class Broker extends Node {
     ServerSocket brokerServerSocket;// Broker Server Socket
     int brokerNum;                  // Broker Number
 
+    public Integer getBrokerHash(int num){
+        return sortedBrokerHash.get(num);
+    }
+
+
+
     /**
      * Constructor for Broker
      * @param num Broker number, in order to retrieve address
      */
     public Broker(int num){
+        super();
         this.brokerNum = num-1;
         this.address = brokerList.get(this.brokerNum);
         this.activeClients          = new HashMap<>();
         this.registerdTopicClients  = new HashMap<>();
         this.topicHistory           = new HashMap<>();
-        this.topicStories           = new ArrayList<>();
+        this.topicStories           = new HashMap<>();
+        this.sortedBrokerHash	    = new ArrayList<>();
 
         this.createLogFile("Broker"+(num)+"-log.txt");
         System.out.println("[Broker]: Broker log file created.");
@@ -81,24 +86,28 @@ public class Broker extends Node {
      */
     private void calculateKeys(){
         // Get Broker addresses
-        ArrayList<Address> brokerList = readAddresses();
-        brokerHash = new ArrayList<>();
+        //ArrayList<Address> brokerList = readAddresses(); //-00
+        brokerHash = new HashMap<>();
         for (Address ad : brokerList){
-            brokerHash.add((new Pair<Address,Integer> (ad,(ad.getIp()+ad.getPort()).hashCode())));
+            brokerHash.put(ad,(ad.getIp()+ad.getPort()).hashCode());
         }
-        // Sort brokers by hash
-        Collections.sort(brokerHash, new Comparator<Pair<Address, Integer>>() {
-            @Override 
-            public int compare(final Pair<Address, Integer> left, final Pair<Address, Integer> right) {
-                return left.second - right.second;
-            }
-        });
+
+        sortBrokerHashes();
+
         // Get topic names and hashcodes
         ArrayList<String> topics = readTopics();
-        topicHash = new ArrayList<>();
+        topicHash = new HashMap<>();
         for (String t : topics){
-            topicHash.add((new Pair<String,Integer> (t, t.hashCode())));
+            topicHash.put(t, t.hashCode());
         }
+    }
+
+    private void sortBrokerHashes(){
+        for (Address address : brokerHash.keySet()){
+            sortedBrokerHash.add(brokerHash.get(address));
+        }
+        // Sort brokers by hash
+        Collections.sort(sortedBrokerHash);
     }
 
     /**
@@ -107,21 +116,24 @@ public class Broker extends Node {
      */
     private ArrayList<String> readTopics(){
         ArrayList<String> topics = new ArrayList<String>();
-        try {
-            File confFile = new File("conf.txt");
-            Scanner confReader = new Scanner(confFile);
-            String line = confReader.nextLine();
-            while (confReader.hasNextLine() && line != "%") {
-                line = confReader.nextLine();
-            }
-            while (confReader.hasNextLine()){
-                line = confReader.nextLine();
-                topics.add(line);
-            }
-            confReader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            File confFile = new File("conf.txt");
+//            Scanner confReader = new Scanner(confFile);
+//            String line = confReader.nextLine();
+//            while (confReader.hasNextLine() && line != "%") {
+//                line = confReader.nextLine();
+//            }
+//            while (confReader.hasNextLine()){
+//                line = confReader.nextLine();
+//                topics.add(line);
+//            }
+//            confReader.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        topics.add("Random topic1");
+        topics.add("FIIIRE");
+        topics.add("Campsite part 3");
         return topics;
     }
 }

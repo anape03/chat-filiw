@@ -53,8 +53,8 @@ public class activity_show_chat extends AppCompatActivity {
         setTopicValues(); // Set Topic Name and Image
         setUpClient();
 
-        GetTask getTask = new GetTask();
-        getTask.execute("CONNECT_TO_BROKER");
+        TaskConnectToBroker getTaskConnectToBroker = new TaskConnectToBroker();
+        getTaskConnectToBroker.execute("CONNECT_TO_BROKER");
 
         ///////////// For testing purposes
 //        for (int i=0; i<=10; i++){
@@ -70,7 +70,8 @@ public class activity_show_chat extends AppCompatActivity {
 
         ImageButton homeButton = findViewById(R.id.show_chat_button_back);
         homeButton.setOnClickListener(v -> {
-            getTask.execute("EXIT_CLIENT");
+            TaskExitClient getTaskExitClient = new TaskExitClient();
+            getTaskExitClient.execute("EXIT_CLIENT");
             finish();
         });
 
@@ -78,12 +79,17 @@ public class activity_show_chat extends AppCompatActivity {
         addFileButton.setOnClickListener(v -> {
             // TODO: go to add file
             getFilename(); // Get filename from other activity
-            getTask.execute("SEND_MESSAGE", "MULTIMEDIA", filename);
+            TaskSendMessage getTaskSendMessage = new TaskSendMessage();
+            getTaskSendMessage.execute("SEND_MESSAGE", "MULTIMEDIA", filename);
         });
 
         ImageButton sendMessageButton = findViewById(R.id.show_chat_button_send_message);
         sendMessageButton.setOnClickListener(v -> {
-            getTask.execute("SEND_MESSAGE", "TEXT", this.getTextWritten());
+            if (!this.getTextWritten().equals("")) {
+                TaskSendMessage getTaskSendMessage = new TaskSendMessage();
+                getTaskSendMessage.execute("SEND_MESSAGE", "TEXT", this.getTextWritten());
+                this.setTextWritten("");
+            }
         });
     }
 
@@ -92,25 +98,96 @@ public class activity_show_chat extends AppCompatActivity {
      */
     private void setUpClient(){
         client = new Client(username, topicName, this); // Generate client
-        client.setBrokerAddresses(readAddresses()); // get all broker addresses
+        client.setBrokerAddresses(this.readAddresses()); // get all broker addresses
         client.setAddressBroker();  //set random broker
     }
 
-    private class GetTask extends AsyncTask<String, String, Client> {
+//    private class GetTask extends AsyncTask<String, String, Client> {
+//        @Override
+//        protected Client doInBackground(String... strings) {
+//            switch (strings[0]) {
+//                case "CONNECT_TO_BROKER":
+//                    return client.connectToBroker(topicName);
+//                case "RECEIVE_MESSAGES":
+//                    client.getConsumer().showConversationData();
+//                    return client;
+//                case "SEND_MESSAGE":
+//                    client.getPublisher().sendMessage(strings[1], strings[2]);
+//                    return client;
+//                case "EXIT_CLIENT":
+//                    client.getPublisher().exitRequest();
+//                    return client;
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Client user) {
+//            super.onPostExecute(user);
+//            if (user != null)
+//                client = user;
+//        }
+//    }
+
+    private class TaskConnectToBroker extends AsyncTask<String, String, Client> {
         @Override
         protected Client doInBackground(String... strings) {
-            switch (strings[0]) {
-                case "CONNECT_TO_BROKER":
-                    return client.connectToBroker(topicName);
-                case "RECEIVE_MESSAGES":
-                    client.getConsumer().showConversationData();
-                    return client;
-                case "SEND_MESSAGE":
-                    client.getPublisher().sendMessage(strings[1], strings[2]);
-                    return client;
-                case "EXIT_CLIENT":
-                    client.getPublisher().exitRequest();
-                    return client;
+            if (strings[0].equals("CONNECT_TO_BROKER")) {
+                return client.connectToBroker(topicName);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Client user) {
+            super.onPostExecute(user);
+            if (user != null)
+                client = user;
+        }
+    }
+
+    private class TaskReceiveMessages extends AsyncTask<String, String, Client> {
+        @Override
+        protected Client doInBackground(String... strings) {
+            if (strings[0].equals("RECEIVE_MESSAGES")) {
+                client.getConsumer().showConversationData();
+                return client;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Client user) {
+            super.onPostExecute(user);
+            if (user != null)
+                client = user;
+        }
+    }
+
+    private class TaskSendMessage extends AsyncTask<String, String, Client> {
+        @Override
+        protected Client doInBackground(String... strings) {
+            if (strings[0].equals("SEND_MESSAGE")) {
+                client.getPublisher().sendMessage(strings[1], strings[2]);
+                return client;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Client user) {
+            super.onPostExecute(user);
+            if (user != null)
+                client = user;
+        }
+    }
+
+    private class TaskExitClient extends AsyncTask<String, String, Client> {
+        @Override
+        protected Client doInBackground(String... strings) {
+            if (strings[0].equals("EXIT_CLIENT")) {
+                client.getPublisher().exitRequest();
+                return client;
             }
             return null;
         }
@@ -171,6 +248,14 @@ public class activity_show_chat extends AppCompatActivity {
     }
 
     /**
+     * Sets text written on screen
+     * @param value text
+     */
+    public void setTextWritten(String value) {
+        ((EditText)findViewById(R.id.show_chat_write_message)).setText(value);
+    }
+
+    /**
      * Extract sender value from message
      * @param message message Value object
      * @return sender name string
@@ -189,7 +274,7 @@ public class activity_show_chat extends AppCompatActivity {
     }
 
     /**
-     * Get Topic name from previous activity
+     * Get Topic name from previous activity0
      * and set it to current one
      */
     private void setTopicValues(){

@@ -1,13 +1,12 @@
 package com.example.filiw.backend;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.net.Socket;
-import java.util.Objects;
-import java.util.ArrayList;
-import android.util.Pair;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class BrokerActionsForClient extends Thread {
     ObjectInputStream in = null;    // Input Stream
@@ -43,6 +42,7 @@ public class BrokerActionsForClient extends Thread {
         try {
             Value receivedMes = (Value)in.readObject();
             desiredTopic = receivedMes.getMessage();
+            System.out.println("[Broker]: Client requests to connect to topic \""+desiredTopic+"\"");
             int manager = managerBroker(desiredTopic);
             broker.activeClients.put(receivedMes.getSenter(),this);
             Value message = null;
@@ -52,6 +52,7 @@ public class BrokerActionsForClient extends Thread {
                 message.setNotification(true);
                 out.writeObject(message);
                 out.flush();
+                broker.writeToFile("[Broker]: Sent message to client: "+message, true);
                 return true;
             } else{                             // Client doesn't change Broker
                 topicalreadyin = broker.registerdTopicClients.containsKey(desiredTopic);
@@ -82,10 +83,10 @@ public class BrokerActionsForClient extends Thread {
         // Stories
         if (desiredTopic.equals("STORIES")){
             LocalDateTime timenow= LocalDateTime.now();
-            for (int i =0; i< broker.topicStories.size();i++){
-                if(!timenow.isAfter(broker.topicStories.get(i).second.plusSeconds(60))){ // only show stories created in the last 60 seconds
+            for (Value value : broker.topicStories.keySet()){
+                if(!timenow.isAfter(broker.topicStories.get(value).plusSeconds(60))){ // only show stories created in the last 60 seconds
                     try{
-                        out.writeObject(broker.topicStories.get(i).first);
+                        out.writeObject(value);
                         out.flush();
                     } catch (IOException ioe){
                         ioe.printStackTrace();
@@ -119,7 +120,7 @@ public class BrokerActionsForClient extends Thread {
      */
     private void addToHistory( Value message){
         if (desiredTopic.equals("STORIES")){
-            broker.topicStories.add(new Pair<>(message, LocalDateTime.now()));
+            broker.topicStories.put(message, LocalDateTime.now());
             return;
         }
         // If new topic (aka no message history) create
@@ -137,12 +138,14 @@ public class BrokerActionsForClient extends Thread {
      */
     private int managerBroker(String topic){
         int topicHash = topic.hashCode();
-        int brokerNum = -1;
-        for (int i=0; i<broker.brokerHash.size(); i++){
-            if (broker.brokerHash.get(i).second < topicHash){
+        broker.writeToFile("[Broker]: Looking for broker responsible for topic with hash: "+topicHash, true);
+        int brokerNum = 1;
+        for (int i=0; i<broker.sortedBrokerHash.size(); i++){
+            if (broker.getBrokerHash(i) < topicHash){
                 brokerNum = i;
             }
         }
+        broker.writeToFile("[Broker]: Broker responsible for topic \""+topic+"\" is Broker"+brokerNum, true);
         return brokerNum;
     }
 

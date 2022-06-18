@@ -58,16 +58,20 @@ public class Client extends Node {
     public activity_show_chat getActivity(){ return activity; }
     public Consumer getConsumer() { return (Consumer)consumer; }
     public Publisher getPublisher() { return (Publisher)publisher; }
-    public void setBrokerAddresses(ArrayList<Address> array) { brokerAddresses = array; }
+    public void setBrokerAddresses(ArrayList<Address> array) {
+        brokerAddresses = array;
+        Log.e("BROKER_ADDRESSES_SET", getBrokerAddresses().toString());
+    }
+    public ArrayList<Address> getBrokerAddresses() { return brokerAddresses; }
     public void setAddressBroker(){ address = getRandomBroker(); }
 
     /**
-     * Get random broekr address to connect to
+     * Get random broker address to connect to
      * @return Broker Address to connect to
      */
     public Address getRandomBroker(){
-        Log.e("BROKER_ADDRESS","Broker addresses found: "+brokerAddresses); //-0
         int rnd = new Random().nextInt(brokerAddresses.size());
+        Log.e("RANDOM_BROKER","Broker addresses found: "+brokerAddresses.get(rnd));
         return new Address(brokerAddresses.get(rnd).getIp(), brokerAddresses.get(rnd).getPort());
     }
             
@@ -102,13 +106,13 @@ public class Client extends Node {
     }
 
     public Client connectToBroker(String topicName){
-        Log.e("BROKER_ADDRESS", "Is broker address reachable: "+sendPingRequest(address.getIp()));
+        Log.e("BROKER_PING", "Is broker address reachable: "+sendPingRequest(address.getIp()));
         desiredTopic = topicName;
-        Log.e("CONNECTION","Trying to connect to topic: "+desiredTopic);
+        Log.e("CONNECT_TOPIC","Trying to connect to topic: "+desiredTopic);
         boolean changeBroker = getTopicInfo();
         try {
             if (changeBroker){
-                Log.e("CONNECTION", "Must connect to broker address "+address); //-0
+                Log.e("CONNECT_TO_ADDRESS", "Must connect to broker address "+address);
                 requestSocket = new Socket(address.getIp(), address.getPort());
                 publisher = new Publisher(this);
                 consumer = new Consumer(this);
@@ -116,7 +120,7 @@ public class Client extends Node {
             }
             ((Publisher)publisher).push(new Value(this.getUsername(), "", false, false));
         } catch (UnknownHostException unknownHost) {
-            Log.e("CONNECTION","You are trying to connect to an unknown host!");
+            Log.e("CONNECTION_FAIL","You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
@@ -163,9 +167,9 @@ public class Client extends Node {
                 String[] data = ((Consumer)consumer).register().split(" ");
                 Log.e("TOPIC_INFO","Received topic info: "+data);
                 if (data[0].equals("yes")){
-                    String ip = brokerAddresses.get(Integer.parseInt(data[1])).getIp();
+                    String ip = getBrokerAddresses().get(Integer.parseInt(data[1])).getIp();
                     address.setIp(ip);
-                    int port = brokerAddresses.get(Integer.parseInt(data[1])).getPort();
+                    int port = getBrokerAddresses().get(Integer.parseInt(data[1])).getPort();
                     address.setPort(port);
                     
                     Value exitmes = new Value(this.username);
