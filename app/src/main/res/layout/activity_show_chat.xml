@@ -52,7 +52,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/show_chat_button_send_message"
         app:layout_constraintHorizontal_bias="0.468"
-        app:layout_constraintStart_toEndOf="@+id/show_chat_button_add_file"
         app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
         app:layout_constraintVertical_bias="0.062"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
@@ -71,32 +70,87 @@
         app:layout_constraintVertical_bias="0.005"
         tools:ignore="RedundantDescriptionCheck" />
 
+
     <ImageButton
         android:id="@+id/show_chat_button_send_message"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="4dp"
         android:background="@android:drawable/ic_menu_send"
         android:backgroundTint="@color/teal_200"
         android:contentDescription="@string/send_message_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.053"
         tools:ignore="RedundantDescriptionCheck" />
 
-    <ImageButton
-        android:id="@+id/show_chat_button_add_file"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/plus_sign"
-        android:contentDescription="@string/insert_file_button"
-        android:padding="20dp"
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="false"
+        android:visibility="invisible"
+        android:tint="@color/whitesmoke"
+        app:layout_constraintBottom_toTopOf="@+id/addPicture"
+        app:layout_constraintEnd_toEndOf="@+id/addPicture"
+        app:layout_constraintStart_toStartOf="@+id/addPicture"
+        app:srcCompat="@android:drawable/presence_video_busy"
+        tools:ignore="ContentDescription"
+
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonOpenChoices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:backgroundTint="@color/confirmation_green"
+        android:clickable="true"
+        android:focusable="true"
+        android:tintMode="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="RedundantDescriptionCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/show_chat_button_back"
+        app:layout_constraintVertical_bias="0.886"
+        app:srcCompat="@drawable/plus_sign"
+        tools:ignore="ContentDescription" />
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        android:clickable="false"
+        android:tint="@color/whitesmoke"
+        app:layout_constraintBottom_toTopOf="@+id/addVideo"
+        app:layout_constraintEnd_toEndOf="@+id/addVideo"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/addVideo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="?attr/actionModeCopyDrawable"
+        tools:ignore="ContentDescription" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        android:clickable="false"
+        android:tint="@color/whitesmoke"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonOpenChoices"
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonOpenChoices"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButtonOpenChoices"
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+        tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

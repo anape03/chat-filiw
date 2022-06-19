@@ -1,14 +1,13 @@
 package com.example.filiw.activities;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,9 +17,8 @@ import com.example.filiw.R;
 import com.example.filiw.adapters.CustomAdapterChat;
 import com.example.filiw.backend.Address;
 import com.example.filiw.backend.Client;
-import com.example.filiw.backend.Consumer;
-import com.example.filiw.backend.Publisher;
 import com.example.filiw.backend.Value;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +27,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class activity_show_chat extends AppCompatActivity {
-    private final static int TOTAL_BROKERS = 3;
 
+    private final static int TOTAL_BROKERS = 3;
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
     private final static String FILENAME = "filename";
@@ -43,6 +41,8 @@ public class activity_show_chat extends AppCompatActivity {
     List<String> senderMessage = new ArrayList<>();
 
     Client client;
+
+    private boolean clicked=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +66,73 @@ public class activity_show_chat extends AppCompatActivity {
         CustomAdapterChat customAdapterChat = new CustomAdapterChat(getApplicationContext(), senderNames, senderMessage);
         chatList.setAdapter(customAdapterChat);
 
+
+        //Create buttons
+
+        FloatingActionButton openchoices=  findViewById(R.id.floatingActionButtonOpenChoices );
+        FloatingActionButton addFileButton = findViewById(R.id.addFile);
+        FloatingActionButton addPictureButton = findViewById(R.id.addPicture);
+        FloatingActionButton addVideoButton = findViewById(R.id.addVideo);
+        ImageButton homeButton = findViewById(R.id.show_chat_button_back);
+        ImageButton sendMessageButton = findViewById(R.id.show_chat_button_send_message);
+
+        /*animations*/
+        Animation rotateOpen= AnimationUtils.loadAnimation
+                (this,R.anim.rotate_open);
+        Animation rotateClose=AnimationUtils.loadAnimation
+                (this,R.anim.rotate_close);
+        Animation fromBottom= AnimationUtils.loadAnimation
+                (this,R.anim.from_bottom);
+        Animation toBottom=AnimationUtils.loadAnimation
+                (this,R.anim.to_bottom);
+
+
         // Handle buttons =============
 
-        ImageButton homeButton = findViewById(R.id.show_chat_button_back);
         homeButton.setOnClickListener(v -> {
             TaskExitClient getTaskExitClient = new TaskExitClient();
             getTaskExitClient.execute("EXIT_CLIENT");
             finish();
         });
 
-        ImageButton addFileButton = findViewById(R.id.show_chat_button_add_file);
+
+
+
+        if (clicked){
+            addPictureButton.setClickable(false);
+            addVideoButton.setClickable(false);
+            addFileButton.setClickable(false);
+        }else{
+            addPictureButton.setClickable(true);
+            addVideoButton.setClickable(true);
+            addFileButton.setClickable(true);
+        }
+
+        openchoices.setOnClickListener(v -> {
+            clicked=!clicked;
+            if (clicked){
+                addPictureButton.show();
+                addVideoButton.show();
+                addFileButton.show();
+                addPictureButton.startAnimation(fromBottom);
+                addVideoButton.startAnimation(fromBottom);
+                addFileButton.startAnimation(fromBottom);
+                openchoices.startAnimation(rotateOpen);
+            }else{
+                addPictureButton.hide();
+                addVideoButton.hide();
+                addFileButton.hide();
+                addPictureButton.startAnimation(toBottom);
+                addVideoButton.startAnimation(toBottom);
+                addFileButton.startAnimation(toBottom);
+                openchoices.startAnimation(rotateClose);
+
+
+
+            }
+        });
+
+
         addFileButton.setOnClickListener(v -> {
             // TODO: go to add file
             getFilename(); // Get filename from other activity
@@ -83,7 +140,6 @@ public class activity_show_chat extends AppCompatActivity {
             getTaskSendMessage.execute("SEND_MESSAGE", "MULTIMEDIA", filename);
         });
 
-        ImageButton sendMessageButton = findViewById(R.id.show_chat_button_send_message);
         sendMessageButton.setOnClickListener(v -> {
             if (!this.getTextWritten().equals("")) {
                 TaskSendMessage getTaskSendMessage = new TaskSendMessage();
@@ -101,7 +157,6 @@ public class activity_show_chat extends AppCompatActivity {
         client.setBrokerAddresses(this.readAddresses()); // get all broker addresses
         client.setAddressBroker();  //set random broker
     }
-
 //    private class GetTask extends AsyncTask<String, String, Client> {
 //        @Override
 //        protected Client doInBackground(String... strings) {

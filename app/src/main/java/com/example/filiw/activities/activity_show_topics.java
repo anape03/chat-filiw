@@ -2,8 +2,6 @@ package com.example.filiw.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,8 +77,8 @@ public class activity_show_topics extends AppCompatActivity {
         bundle.putString(TOPIC_NAME, topicName);
         bundle.putString(USERNAME, username);
         intent.putExtras(bundle);
-
-        startActivity(intent);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        this.startActivity(intent);
     }
 
     /**
