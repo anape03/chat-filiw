@@ -1,8 +1,12 @@
 package com.example.filiw.activities;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -10,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,6 +25,7 @@ import com.example.filiw.backend.Client;
 import com.example.filiw.backend.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,7 +33,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class activity_show_chat extends AppCompatActivity {
-
+    private static final int VIDEO_CAPTURE = 101;
     private final static int TOTAL_BROKERS = 3;
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
@@ -301,6 +307,33 @@ public class activity_show_chat extends AppCompatActivity {
     public String getTextWritten(){
         return ((EditText)findViewById(R.id.show_chat_write_message)).getText().toString().trim();
     }
+
+    private void CaptureVideo(){
+
+        //TODO ASK PERMISSIONS
+        File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        Uri videoUri = Uri.fromFile(mediaFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+        startActivityForResult(intent, VIDEO_CAPTURE);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Video saved to:\n" +
+                        data.getData(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Video recording cancelled.",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Failed to record video",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
     /**
      * Sets text written on screen

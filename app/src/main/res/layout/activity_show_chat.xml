@@ -137,8 +137,6 @@
         app:srcCompat="?attr/actionModeCopyDrawable"
         tools:ignore="ContentDescription" />
 
-
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addPicture"
         android:layout_width="wrap_content"
