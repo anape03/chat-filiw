@@ -47,6 +47,7 @@ public class activity_show_chat extends AppCompatActivity {
     private static List<String> senderMessage = new ArrayList<>();
 
     Client client;
+    CustomAdapterChat customAdapterChat;
 
     private boolean clicked=false;
 
@@ -59,6 +60,9 @@ public class activity_show_chat extends AppCompatActivity {
         setTopicValues(); // Set Topic Name and Image
         setUpClient();
 
+        customAdapterChat = new CustomAdapterChat(getApplicationContext(), senderNames, senderMessage);
+        chatList.setAdapter(customAdapterChat);
+
         TaskConnectToBroker getTaskConnectToBroker = new TaskConnectToBroker();
         getTaskConnectToBroker.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"CONNECT_TO_BROKER");
 
@@ -68,10 +72,6 @@ public class activity_show_chat extends AppCompatActivity {
 //            senderMessage.add("Test a big big very big message to see how it handles the thing Message Number "+i);
 //        }
         /////////////
-
-        CustomAdapterChat customAdapterChat = new CustomAdapterChat(getApplicationContext(), senderNames, senderMessage);
-        chatList.setAdapter(customAdapterChat);
-
 
         //Create buttons
 
@@ -96,9 +96,7 @@ public class activity_show_chat extends AppCompatActivity {
         // Handle buttons =============
 
         homeButton.setOnClickListener(v -> {
-            TaskExitClient getTaskExitClient = new TaskExitClient();
-            getTaskExitClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"EXIT_CLIENT");
-            finish();
+            exitClient();
         });
 
 
@@ -165,6 +163,17 @@ public class activity_show_chat extends AppCompatActivity {
         client = new Client(username, topicName, this); // Generate client
         client.setBrokerAddresses(this.readAddresses()); // get all broker addresses
         client.setAddressBroker();  //set random broker
+    }
+
+    /**
+     * Client wants to exit
+     */
+    private void exitClient(){ // TODO also exit client when back button pressed
+        TaskExitClient getTaskExitClient = new TaskExitClient();
+        getTaskExitClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"EXIT_CLIENT");
+        senderNames.clear();
+        senderMessage.clear();
+        finish();
     }
 
     private class TaskConnectToBroker extends AsyncTask<String, String, Client> {
@@ -261,10 +270,12 @@ public class activity_show_chat extends AppCompatActivity {
      * @param messageValue message received
      */
     public void receiveMessage(Value messageValue){
+        Log.e("MESSAGE","New message received.");
         String sender = messageValue.getSenter();
         String message = messageValue.getMessage();
         senderNames.add(sender);
         senderMessage.add(message);
+        runOnUiThread(() -> customAdapterChat.notifyDataSetChanged());
     }
 
     /**
