@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -74,6 +75,34 @@ public class Client extends Node {
         Log.e("RANDOM_BROKER","Broker addresses found: "+brokerAddresses.get(rnd));
         return new Address(brokerAddresses.get(rnd).getIp(), brokerAddresses.get(rnd).getPort());
     }
+
+    /**
+     * Receive messages from broker
+     */
+    public void receiveMessages(){
+        ((Consumer)consumer).showConversationData();
+    }
+
+    /**
+     * Sent message to broker
+     * @param type message type (MULTIMEDIA, TEXT)
+     * @param message message contents
+     */
+    public void sendMessage(String type, String message){
+        Log.e("CLIENT_SEND","Client wants to sent message.");
+        int status = ((Publisher)publisher).sendMessage(type,message);
+        switch (status){
+            case 0:
+                Log.e("PUBLISHER_SEND","Message sent successfully.");
+                break;
+            case -2:
+                Log.e("PUBLISHER_SEND","Multimedia file not found.");
+                break;
+            case -1:
+                Log.e("PUBLISHER_SEND","Invalid message type given.");
+                break;
+        }
+    }
             
     @Override
     public void run() {
@@ -118,6 +147,7 @@ public class Client extends Node {
                 consumer = new Consumer(this);
                 ((Publisher)publisher).push(new Value(this.getUsername(), desiredTopic, false, false));
             }
+            Alivesocket = true;
             ((Publisher)publisher).push(new Value(this.getUsername(), "", false, false));
         } catch (UnknownHostException unknownHost) {
             Log.e("CONNECTION_FAIL","You are trying to connect to an unknown host!");
@@ -157,7 +187,7 @@ public class Client extends Node {
         
         try {
             Log.e("CONNECTION", "Creating socket to broker: "+address);
-            requestSocket = new Socket(address.getIp(), address.getPort()); // TODO: it gets stuck? somehow
+            requestSocket = new Socket(address.getIp(), address.getPort());
             Log.e("CONNECTION","Request socket: "+requestSocket);
             publisher = new Publisher(this);
             consumer = new Consumer(this);
@@ -165,7 +195,7 @@ public class Client extends Node {
                 Value message = new Value(this.username, desiredTopic, false, false);
                 ((Publisher)publisher).push(message);
                 String[] data = ((Consumer)consumer).register().split(" ");
-                Log.e("TOPIC_INFO","Received topic info: "+data);
+                Log.e("TOPIC_INFO","Received topic info: "+ Arrays.toString(data));
                 if (data[0].equals("yes")){
                     String ip = getBrokerAddresses().get(Integer.parseInt(data[1])).getIp();
                     address.setIp(ip);

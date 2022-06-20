@@ -56,6 +56,12 @@ public class Consumer extends Node {
      * Receive messages and show conversation on screen
      */
     public synchronized void showConversationData(){
+        Log.e("CONSUMER_SHOW_CONVO","In show conversation data.");
+        if (Objects.isNull(in)) {
+            Log.e("CONSUMER_IN","Input stream is null.");
+            return;
+        }
+        Log.e("CONSUMER_IN","Input stream isn't null.");
         try{
             ArrayList<Value> chunksOfMess = new ArrayList<>();
             while(true){
@@ -64,6 +70,7 @@ public class Consumer extends Node {
                 }
                 
                 if (client.Alivesocket){
+                    Log.e("CONSUMER_ALIVE_SOCKET","Socket is alive.");
                     Value mess = (Value)in.readObject();
                     if(mess.multimediaFile!= null){
                         chunksOfMess.add(mess);
@@ -95,10 +102,12 @@ public class Consumer extends Node {
                         continue;
                     }
                     if (!mess.getNotification()){
+                        Log.e("CONSUMER_MESSAGE","Message received: "+mess);
                         client.writeToFile("[Consumer]: Message received: "+mess, false);
-                        System.out.println(mess);
                         client.getActivity().receiveMessage(mess); // send message to activity
                     }
+                }else{
+                    Log.e("CONSUMER_ALIVE_SOCKET","Socket is not alive.");
                 }
             }
 
@@ -114,9 +123,7 @@ public class Consumer extends Node {
 
     @Override
     public void run(){
-        if (!Objects.isNull(in)){
-            showConversationData();
-        }
+        showConversationData();
     }
     
     /**

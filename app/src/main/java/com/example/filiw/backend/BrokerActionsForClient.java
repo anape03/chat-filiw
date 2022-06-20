@@ -48,7 +48,7 @@ public class BrokerActionsForClient extends Thread {
             Value message = null;
             if (manager != broker.brokerNum){   // Client must change Broker
                 broker.writeToFile("[Broker]: Client must change broker.", true);
-                message = new Value("Broker"+broker.brokerNum, "yes "+manager, false, true);
+                message = new Value("Broker"+(broker.brokerNum+1), "yes "+manager, false, true);
                 message.setNotification(true);
                 out.writeObject(message);
                 out.flush();
@@ -145,7 +145,7 @@ public class BrokerActionsForClient extends Thread {
                 brokerNum = i;
             }
         }
-        broker.writeToFile("[Broker]: Broker responsible for topic \""+topic+"\" is Broker"+brokerNum, true);
+        broker.writeToFile("[Broker]: Broker responsible for topic \""+topic+"\" is Broker"+(brokerNum+1), true);
         return brokerNum;
     }
 
@@ -175,9 +175,9 @@ public class BrokerActionsForClient extends Thread {
                 // Send to registered clients
                 for (int z=0; z<broker.registerdTopicClients.get(desiredTopic).size(); z++){
                     String username = broker.registerdTopicClients.get(desiredTopic).get(z);
-                    if (!username.equals(((Value)mes).getSenter())){
+//                    if (!username.equals(((Value)mes).getSenter())){
                         broker.activeClients.get(username).push(mes);
-                    }
+//                    }
                 }
                 
             }

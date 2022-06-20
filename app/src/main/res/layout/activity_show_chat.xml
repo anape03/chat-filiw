@@ -19,7 +19,7 @@
 
     <ListView
         android:id="@+id/show_chat_list"
-        android:layout_width="380dp"
+        android:layout_width="370dp"
         android:layout_height="545dp"
         android:stackFromBottom="true"
         android:transcriptMode="normal"
@@ -33,7 +33,6 @@
         android:id="@+id/show_chat_write_message"
         android:layout_width="280dp"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
         android:autofillHints=""
         android:ems="10"
         android:enabled="true"
@@ -49,11 +48,12 @@
         android:selectAllOnFocus="true"
         android:textColor="@color/gray_100"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonOpenChoices"
         app:layout_constraintEnd_toStartOf="@+id/show_chat_button_send_message"
-        app:layout_constraintHorizontal_bias="0.468"
-        app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
-        app:layout_constraintVertical_bias="0.062"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/floatingActionButtonOpenChoices"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonOpenChoices"
+        app:layout_constraintVertical_bias="0.077"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     <ImageButton
@@ -75,17 +75,15 @@
         android:id="@+id/show_chat_button_send_message"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="4dp"
         android:background="@android:drawable/ic_menu_send"
         android:backgroundTint="@color/teal_200"
         android:contentDescription="@string/send_message_button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/show_chat_write_message"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
-        app:layout_constraintVertical_bias="0.053"
+        app:layout_constraintTop_toTopOf="@+id/show_chat_write_message"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="RedundantDescriptionCheck" />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addVideo"
@@ -103,22 +101,22 @@
 
         />
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonOpenChoices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:backgroundTint="@color/confirmation_green"
         android:clickable="true"
         android:focusable="true"
         android:tintMode="@android:color/white"
+        app:backgroundTint="@color/confirmation_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_chat_button_back"
-        app:layout_constraintVertical_bias="0.886"
+        app:layout_constraintTop_toBottomOf="@+id/show_chat_list"
+        app:layout_constraintVertical_bias="0.126"
         app:srcCompat="@drawable/plus_sign"
         tools:ignore="ContentDescription" />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addFile"
