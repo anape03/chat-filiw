@@ -69,15 +69,15 @@ public class Node extends Thread {
      * @param print Whether to also print info on screen
      */
     protected void writeToFile(String info, boolean print){ 
-        try {
+//        try {
             if (print){
                 System.out.println(info);
             }
-            output.write(info + "\n");
-            output.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//            output.write(info + "\n");
+//            output.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

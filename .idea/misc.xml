@@ -3,17 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/activity_listview.xml" value="0.25416666666666665" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/activity_show_chat.xml" value="0.25364583333333335" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/activity_show_topics.xml" value="0.25416666666666665" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/content_activity_show_chat.xml" value="0.2" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/fragment_add_file.xml" value="0.25416666666666665" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/list_view_item_message.xml" value="0.25364583333333335" />
+        <entry key="..\:/Anastasia/AUEB/6th Semester 2021-2022/Distributed Systems/project/chat-filiw/app/src/main/res/layout/list_view_item_topic.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_listview.xml" value="0.23867753623188406" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_main2.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_show_chat.xml" value="0.2" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/activity_show_topics.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/petro/Desktop/Filiw/app/src/main/res/layout/fragment_activity_show_topics.xml" value="0.23645833333333333" />
-        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_main.xml" value="0.27447916666666666" />
-        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_show_chat.xml" value="0.27447916666666666" />
-        <entry key="..\:/chat-filiw/app/src/main/res/layout/activity_show_topics.xml" value="0.27447916666666666" />
-        <entry key="..\:/chat-filiw/app/src/main/res/layout/list_view_item_message.xml" value="0.27447916666666666" />
-        <entry key="..\:/chat-filiw/app/src/main/res/layout/list_view_item_topic.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>

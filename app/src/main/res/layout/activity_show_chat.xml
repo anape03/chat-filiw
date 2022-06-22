@@ -20,10 +20,9 @@
     <ListView
         android:id="@+id/show_chat_list"
         android:layout_width="370dp"
-        android:layout_height="545dp"
+        android:layout_height="400dp"
         android:stackFromBottom="true"
         android:transcriptMode="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/show_chat_button_back"
