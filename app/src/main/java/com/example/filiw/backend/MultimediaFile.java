@@ -1,6 +1,6 @@
 package com.example.filiw.backend;
 
-import android.media.MediaMetadataRetriever;
+//import android.media.MediaMetadataRetriever;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,26 +34,26 @@ public class MultimediaFile implements Serializable {
         }
 
         if(!extension.equals("STRING")){ // Not Text Message
-            File m_file = new File(multimediaFileName);
-            Path m_path = Paths.get(multimediaFileName);
-            MediaMetadataRetriever mMR = new MediaMetadataRetriever();
-            mMR.setDataSource(m_file.getPath());
-            try {
-                BasicFileAttributes attr = Files.readAttributes(m_path, BasicFileAttributes.class);
-                this.dateCreated = attr.creationTime().toString();
-                this.length = Long.toString(attr.size()) ;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+//            File m_file = new File(multimediaFileName);
+//            Path m_path = Paths.get(multimediaFileName);
+//            MediaMetadataRetriever mMR = new MediaMetadataRetriever();
+//            mMR.setDataSource(m_file.getPath());
+//            try {
+//                BasicFileAttributes attr = Files.readAttributes(m_path, BasicFileAttributes.class);
+//                this.dateCreated = attr.creationTime().toString();
+//                this.length = Long.toString(attr.size()) ;
+//            } catch (IOException e1) {
+//                e1.printStackTrace();
+//            }
 
             if (extension.equals("mp4")){ // video
-                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-                this.frameRate = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+//                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+//                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+//                this.frameRate = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
             }
             if (extension.equals("jpg") || extension.equals("jpeg")){ // image
-                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_WIDTH);
-                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_HEIGHT);
+//                this.frameWidth = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_WIDTH);
+//                this.frameHeight = mMR.extractMetadata(MediaMetadataRetriever.METADATA_KEY_IMAGE_HEIGHT);
             }
         }
 
