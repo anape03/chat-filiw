@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <Button
+        android:id="@+id/buttonCapture"
+        android:layout_width="133dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="72dp"
+        android:text="Καμερα"
+        app:layout_constraintEnd_toStartOf="@+id/buttonfromStorage"
+        app:layout_constraintHorizontal_bias="0.396"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textFROM"></Button>
+
+    <Button
+        android:id="@+id/buttonSendVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:text="Αποστολή"
+        android:textColor="@color/confirmation_green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/buttonfromStorage"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/buttoncancelvideo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.748" />
+
+    <Button
+        android:id="@+id/buttonfromStorage"
+        android:layout_width="149dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="44dp"
+        android:text="Συλλογή"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonCapture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonCapture" />
+
+    <TextView
+        android:id="@+id/textFROM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:text="Επιλογή από:"
+        android:textColor="@color/confirmation_green"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttoncancelvideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ακύρωση"
+        android:textColor="#FF0000"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSendVideo"
+        app:layout_constraintStart_toStartOf="@+id/buttonCapture"
+        app:layout_constraintTop_toTopOf="@+id/buttonSendVideo"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Επιλέξτε αποστολή για να στείλετε το βίντεο"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.622"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.554" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

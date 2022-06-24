@@ -1,18 +1,11 @@
 package com.example.filiw.activities;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -33,19 +25,15 @@ import com.example.filiw.backend.Client;
 import com.example.filiw.backend.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
 public class activity_show_chat extends AppCompatActivity {
-    private static final int VIDEO_CAPTURE = 101;
     private final static int TOTAL_BROKERS = 3;
+    static final int VIDEO_CAPTURE = 1;
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
     private final static String FILENAME = "filename";
@@ -120,7 +108,8 @@ public class activity_show_chat extends AppCompatActivity {
 
 
         addVideoButton.setOnClickListener(v -> {
-
+            Intent temp=new Intent(activity_show_chat.this,ActivityCaptureVideo.class);
+            startActivity(temp);
         });
 
 
