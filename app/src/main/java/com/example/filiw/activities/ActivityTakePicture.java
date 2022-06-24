@@ -32,7 +32,6 @@ public class ActivityTakePicture extends Activity
     private final String[] PERMISSIONS = {  Manifest.permission.CAMERA,
                                             Manifest.permission.READ_EXTERNAL_STORAGE,
                                             Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private final String[] PERMISSIONS2 = {Manifest.permission.READ_EXTERNAL_STORAGE};
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -44,24 +43,17 @@ public class ActivityTakePicture extends Activity
         Button storageButton = (Button)findViewById(R.id.buttonStorage);
         Button cancel=(Button)findViewById(R.id.buttoncanceltakephoto);
 
-
+        if (!hasPermissions(this, PERMISSIONS)) {
+            int PERMISSION_ALL = 1;
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }
 
         photoButton.setOnClickListener(v -> {
-            if (!hasPermissions(this, PERMISSIONS)) {
-                int PERMISSION_ALL = 1;
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-            }
-
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
         });
 
         storageButton.setOnClickListener(v -> {
-            if (!hasPermissions(this, PERMISSIONS2)) {
-                int PERMISSION_ALL = 1;
-                ActivityCompat.requestPermissions(this, PERMISSIONS2, PERMISSION_ALL);
-            }
-
             // Create the Intent for Image Gallery.
             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.

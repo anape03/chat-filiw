@@ -87,7 +87,6 @@ public class activity_show_chat extends AppCompatActivity {
         //Create buttons
 
         FloatingActionButton openchoices=  findViewById(R.id.floatingActionButtonOpenChoices );
-        FloatingActionButton addFileButton = findViewById(R.id.addFile);
         FloatingActionButton addPictureButton = findViewById(R.id.addPicture);
         FloatingActionButton addVideoButton = findViewById(R.id.addVideo);
         ImageButton homeButton = findViewById(R.id.show_chat_button_back);
@@ -114,11 +113,9 @@ public class activity_show_chat extends AppCompatActivity {
         if (clicked){
             addPictureButton.setClickable(false);
             addVideoButton.setClickable(false);
-            addFileButton.setClickable(false);
         }else{
             addPictureButton.setClickable(true);
             addVideoButton.setClickable(true);
-            addFileButton.setClickable(true);
         }
 
 
@@ -139,33 +136,20 @@ public class activity_show_chat extends AppCompatActivity {
             if (clicked){
                 addPictureButton.show();
                 addVideoButton.show();
-                addFileButton.show();
                 addPictureButton.startAnimation(fromBottom);
                 addVideoButton.startAnimation(fromBottom);
-                addFileButton.startAnimation(fromBottom);
                 openchoices.startAnimation(rotateOpen);
             }else{
                 addPictureButton.hide();
                 addVideoButton.hide();
-                addFileButton.hide();
                 addPictureButton.startAnimation(toBottom);
                 addVideoButton.startAnimation(toBottom);
-                addFileButton.startAnimation(toBottom);
                 openchoices.startAnimation(rotateClose);
 
 
 
             }
         });
-
-
-        addFileButton.setOnClickListener(v -> {
-            // TODO: go to add file
-            getFilename(); // Get filename from other activity
-            TaskSendMessage getTaskSendMessage = new TaskSendMessage();
-            getTaskSendMessage.execute("SEND_MESSAGE", "MULTIMEDIA", filename);
-        });
-
         sendMessageButton.setOnClickListener(v -> {
             Log.e("SEND_MESSAGE_BUTTON","Send message button pressed.");
             String text = this.getTextWritten();
@@ -321,7 +305,6 @@ public class activity_show_chat extends AppCompatActivity {
         return true;
     }
 
-
 //    private void CaptureVideo(){
 //        if (!hasPermissions(this, PERMISSIONS)) {
 //            int PERMISSION_ALL = 1;
@@ -351,6 +334,7 @@ public class activity_show_chat extends AppCompatActivity {
             }
         }
     }
+
 
 
     /**
