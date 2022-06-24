@@ -33,4 +33,16 @@
     <string name="url">URL</string>
     <string name="loc">Local</string>
     <string name="w">Raw</string>
+    <string name="camera">Καμερα</string>
+    <string name="send">Αποστολή</string>
+    <string name="album">Συλλογή</string>
+    <string name="seeurphoto">Η φωτογραφία σας θα προβληθεί παρακάτω</string>
+    <string name="choosefrom">Επιλογή από:</string>
+    <string name="canc">Ακύρωση</string>
+    <string name="came">Καμερα</string>
+    <string name="sendd">Αποστολή</string>
+    <string name="alb">Συλλογή</string>
+    <string name="choosefromm">Επιλογή από:</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="choosesend">Επιλέξτε αποστολή για να στείλετε το βίντεο</string>
 </resources>
