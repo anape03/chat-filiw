@@ -41,29 +41,35 @@ public class ActivityTakePicture extends Activity
         this.imageView = (ImageView)this.findViewById(R.id.imageViewTakenPicture);
         Button photoButton = (Button)this.findViewById(R.id.buttonTakePhoto);
         Button backButton = (Button)this.findViewById(R.id.buttonBack);
-
-        //  ------------Gia epilogh eikonas apo gallery------------
         Button storageButton = (Button)findViewById(R.id.buttonStorage);
 
         if (!hasPermissions(this, PERMISSIONS)) {
             int PERMISSION_ALL = 1;
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
+
         photoButton.setOnClickListener(v -> {
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
         });
 
-        //  ------------Gia epilogh eikonas apo gallery------------
         storageButton.setOnClickListener(v -> {
             // Create the Intent for Image Gallery.
             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
             startActivityForResult(i, LOAD_IMAGE_RESULTS);
+
+//            Ayto ua mpei sto koumpi gia epilogh video apo to sotrage
+//            ACTION_PICK: Pick an item from the data, returning what was selected.
+//            Input: getData() is URI containing a directory of data (vnd.android.cursor.dir/*) from which to pick an item.
+
+//            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+//            // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
+//            startActivityForResult(i, LOAD_IMAGE_RESULTS);
         });
 
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent intent = new Intent(ActivityTakePicture.this, activity_show_chat.class);
             intent.putExtra("mediafilepath", imagePath);
             startActivity(intent);
         });
@@ -81,31 +87,23 @@ public class ActivityTakePicture extends Activity
 
         //  ------------Gia epilogh eikonas apo gallery------------
         if (requestCode == LOAD_IMAGE_RESULTS && resultCode == RESULT_OK && data != null) {
-            // Let's read picked image data - its URI
-            Uri pickedImage = data.getData();
-            // Let's read picked image path using content resolver
-            String[] filePath = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-            cursor.moveToFirst();
-            @SuppressLint("Range") String imP = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            imagePath = imP;
-            // Now we need to set the GUI ImageView data with data read from the picked file.
-            imageView.setImageBitmap(BitmapFactory.decodeFile(imP));
-
-            // At the end remember to close the cursor or you will end with the RuntimeException!
-            cursor.close();
+            String[] imagesPath = { MediaStore.Images.Media.DATA };
+            //String[] videosPath = { MediaStore.Video.Media.DATA };
+            String imp = getMultimediaFilePath(data, imagesPath);
+            imagePath = imp;
+            imageView.setImageBitmap(BitmapFactory.decodeFile(imp));
         }
     }
 
     private void saveImage(Bitmap image) {
         try {
             int quality = 100;
-            String videoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+            String imPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
             String dateTime = simpleDateFormat.format(calendar.getTime());
-            new File(videoPath+"/filiw/data").mkdirs();
-            FileOutputStream fos = new FileOutputStream(videoPath + "/filiw/data/" + dateTime + ".jpg");
+            new File(imPath+"/filiw/data").mkdirs();
+            FileOutputStream fos = new FileOutputStream(imPath + "/filiw/data/" + dateTime + ".jpg");
             image.compress(Bitmap.CompressFormat.JPEG, quality, fos);
             fos.close();
         } catch (Exception e) {
@@ -113,7 +111,6 @@ public class ActivityTakePicture extends Activity
         }
     }
 
-//  ------------Isws ta permissions na prepei na pane sthn arxikh othonh------------
     private static boolean hasPermissions(Context context, String[] permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
@@ -123,5 +120,14 @@ public class ActivityTakePicture extends Activity
             }
         }
         return true;
+    }
+
+    protected String getMultimediaFilePath(Intent data, String[] filePath){
+        Uri pickedImage = data.getData();
+        Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
+        cursor.moveToFirst();
+        @SuppressLint("Range") String imP = cursor.getString(cursor.getColumnIndex(filePath[0]));
+        cursor.close();
+        return imP;
     }
 }
