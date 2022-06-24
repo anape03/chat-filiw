@@ -1,7 +1,13 @@
 package com.example.filiw.activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.filiw.R;
 import com.example.filiw.adapters.CustomAdapterChat;
@@ -26,9 +34,12 @@ import com.example.filiw.backend.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -100,8 +111,6 @@ public class activity_show_chat extends AppCompatActivity {
         });
 
 
-
-
         if (clicked){
             addPictureButton.setClickable(false);
             addVideoButton.setClickable(false);
@@ -111,6 +120,19 @@ public class activity_show_chat extends AppCompatActivity {
             addVideoButton.setClickable(true);
             addFileButton.setClickable(true);
         }
+
+
+        addVideoButton.setOnClickListener(v -> {
+
+        });
+
+
+        addPictureButton.setOnClickListener(v -> {
+            Intent temp=new Intent(activity_show_chat.this,ActivityTakePicture.class);
+            startActivity(temp);
+                });
+
+
 
         openchoices.setOnClickListener(v -> {
             clicked=!clicked;
@@ -267,6 +289,7 @@ public class activity_show_chat extends AppCompatActivity {
 
     /**
      * Consumer receives message from broker
+     * Consumer receives message from broker
      * @param messageValue message received
      */
     public void receiveMessage(Value messageValue){
@@ -286,15 +309,32 @@ public class activity_show_chat extends AppCompatActivity {
         return ((EditText)findViewById(R.id.show_chat_write_message)).getText().toString().trim();
     }
 
-    private void CaptureVideo(){
 
-        //TODO ASK PERMISSIONS
-        File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        Uri videoUri = Uri.fromFile(mediaFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-        startActivityForResult(intent, VIDEO_CAPTURE);
+    private static boolean hasPermissions(Context context, String[] permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
+
+
+//    private void CaptureVideo(){
+//        if (!hasPermissions(this, PERMISSIONS)) {
+//            int PERMISSION_ALL = 1;
+//            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+//        }
+//        else {
+//            File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+//            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//            Uri videoUri = Uri.fromFile(mediaFile);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+//            startActivityForResult(intent, VIDEO_CAPTURE);
+//        }
+//    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
