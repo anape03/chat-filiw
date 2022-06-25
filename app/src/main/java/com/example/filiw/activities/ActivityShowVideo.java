@@ -25,10 +25,10 @@ public class  ActivityShowVideo  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.videoView = (VideoView) findViewById(R.id.videoView);
-        this.buttonRaw = (Button) findViewById(R.id.button_raw);
-        this.buttonLocal = (Button) findViewById(R.id.button_local );
-        this.buttonURL = (Button) findViewById(R.id.button_url);
+        this.videoView = findViewById(R.id.videoView);
+        this.buttonRaw = findViewById(R.id.button_raw);
+        this.buttonLocal = findViewById(R.id.button_local );
+        this.buttonURL = findViewById(R.id.button_url);
 
 
         // Set the media controller buttons
