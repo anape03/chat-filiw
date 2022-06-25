@@ -19,7 +19,11 @@ public class Activity_FirstPage extends AppCompatActivity {
         Button contiinue =findViewById(R.id.buttoncontinuefromFrontPage);
         contiinue .setOnClickListener(v -> {
             Intent temp=new Intent(Activity_FirstPage.this,activity_show_topics.class);
-            temp.putExtra("nameofperson",puser.getText().toString().trim());
+            if (puser.getText().toString().trim().length()!=0){
+                temp.putExtra("nameofperson",puser.getText().toString().trim());
+            }else{
+                temp.putExtra("nameofperson","Guest");
+            }
             startActivity(temp);
         });
     }
