@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,28 +35,38 @@ public class BrokerActionsForClient extends Thread {
 
     /**
      * Handles first connection with the Client
-     * @return true if to close connection with client after
-     *         false if to keep connection with client after
+     * @return type of connection "ALL_TOPICS_INFO", "TOPIC_CONNECT"
      */
-    private boolean firstConnect(){
-        boolean topicalreadyin=false;
+    private String firstConnect(){
         try {
             Value receivedMes = (Value)in.readObject();
-            desiredTopic = receivedMes.getMessage();
-            System.out.println("[Broker]: Client requests to connect to topic \""+desiredTopic+"\"");
+            String clientName = receivedMes.getSenter();
+            String messageFromClient = receivedMes.getMessage();
+            if (messageFromClient.equals("INITIALISATION_MESSAGE")){
+                broker.writeToFile("[Broker]: Client \""+clientName+"\" sent initialisation message.",true);
+                receivedMes = (Value)in.readObject();
+                clientName = receivedMes.getSenter();
+                messageFromClient = receivedMes.getMessage();
+            }
+            broker.writeToFile("[Broker]: Received message from \""+clientName+"\": "+messageFromClient,true);
+            if (messageFromClient.equals("ALL_TOPIC_INFO")){
+                broker.writeToFile("[Broker]: Client \""+clientName+"\" requests all topic info.",true);
+                String all_topic_info = getAllTopicInfo();
+                sendToClient(all_topic_info);
+                broker.writeToFile("[Broker]: Topic info sent to \""+clientName+"\".",true);
+                return "ALL_TOPICS_INFO";
+            }
+            desiredTopic = messageFromClient;
+            broker.writeToFile("[Broker]: Client requests to connect to topic \""+desiredTopic+"\"", true);
             int manager = managerBroker(desiredTopic);
             broker.activeClients.put(receivedMes.getSenter(),this);
-            Value message = null;
+
             if (manager != broker.brokerNum){   // Client must change Broker
                 broker.writeToFile("[Broker]: Client must change broker.", true);
-                message = new Value("Broker"+(broker.brokerNum+1), "yes "+manager, false, true);
-                message.setNotification(true);
-                out.writeObject(message);
-                out.flush();
-                broker.writeToFile("[Broker]: Sent message to client: "+message, true);
-                return true;
+                sendToClient("yes "+manager);
+                return "TOPIC_CONNECT";
             } else{                             // Client doesn't change Broker
-                topicalreadyin = broker.registerdTopicClients.containsKey(desiredTopic);
+                boolean topicalreadyin = broker.registerdTopicClients.containsKey(desiredTopic);
                 if (!topicalreadyin){
                     broker.registerdTopicClients.put(desiredTopic, new ArrayList<>());
                 } else{
@@ -63,23 +74,42 @@ public class BrokerActionsForClient extends Thread {
                 }
                 broker.registerdTopicClients.get(desiredTopic).add(receivedMes.getSenter());
             }
-            message = new Value("Broker"+broker.brokerNum, "no", false, true);
-            message.setNotification(true);
-            out.writeObject(message);
-            out.flush();
+            sendToClient("no");
             
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
         }
-        return false;
+        return "TOPIC_CONNECT";
     }
 
     /**
-     * Sent message history to new client.
+     * Get all topic info from broker.
+     * (topic names and last message for each topic)
+     * @return all info in format:
+     * topic1&last_message_in_topic1%topic2&last_message_in_topic2....
      */
-    private void sentHistory(){
+    private String getAllTopicInfo(){
+        String all_topic_info = "";
+        String sep_topics = "%";        // separator for different topics
+        String sep_topic_mes = "&";     // separator for topic and it's last message
+        for (String topic : broker.topicHistory.keySet()){
+            ArrayList<Value> message_list = broker.topicHistory.get(topic);
+            all_topic_info += topic + sep_topic_mes;
+            if (message_list.size() != 0) {
+                String sender = message_list.get(message_list.size() - 1).getSenter();
+                String last_message = message_list.get(message_list.size() - 1).getMessage();
+                all_topic_info += sender + ": " + last_message + sep_topics;
+            }
+        }
+        return all_topic_info;
+    }
+
+    /**
+     * Send message history to new client.
+     */
+    private void sendHistory(){
         // Stories
         if (desiredTopic.equals("STORIES")){
             LocalDateTime timenow= LocalDateTime.now();
@@ -153,40 +183,50 @@ public class BrokerActionsForClient extends Thread {
     public void run() {
         broker.writeToFile("[Broker]: Connection is made at port: " + connection.getPort(), true);
         try {
-            firstConnect();
-            sentHistory();
-            while(true){
-                Object mes = in.readObject();
+            String connectionType = firstConnect();
+            broker.writeToFile("[Broker]: Connection type: " + connectionType, true);
+            if (!connectionType.equals("ALL_TOPICS_INFO")) {
+                broker.writeToFile("[Broker]: Sending message history to client...", true);
+                sendHistory();
+            }
+            while (true) {
+//                Object mes = in.readObject();
+                Object mes = readMessages();
                 // If exit message
-                if (((Value)mes).getExit()){
+                if (((Value) mes).getExit()) {
                     broker.writeToFile("[Broker]: Disconnecting Client...", true);
-                    removeClient(((Value)mes).getSenter());
+                    removeClient(((Value) mes).getSenter());
                     break;
                 }
                 // Add to log
-                broker.writeToFile("[Broker]: Message Received: "+mes, true);
-                
-                if (((Value)mes).getMessage().equals("")){
+                broker.writeToFile("[Broker]: Message Received: " + mes, true);
+
+                if (((Value) mes).getMessage().equals("")) {
                     continue;
                 }
-                
+
                 // Add message to topic history
-                addToHistory((Value)mes);
+                addToHistory((Value) mes);
                 // Send to registered clients
-                for (int z=0; z<broker.registerdTopicClients.get(desiredTopic).size(); z++){
+                for (int z = 0; z < broker.registerdTopicClients.get(desiredTopic).size(); z++) {
                     String username = broker.registerdTopicClients.get(desiredTopic).get(z);
 //                    if (!username.equals(((Value)mes).getSenter())){
-                        broker.activeClients.get(username).push(mes);
+                    broker.activeClients.get(username).push(mes);
 //                    }
                 }
-                
+
             }
 
+        } catch (SocketException socketException){
+        }catch (ClassNotFoundException classNFException) {
+            classNFException.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException classNFException) {
-            classNFException.printStackTrace();
-        } 
+        }
+    }
+
+    private synchronized Object readMessages() throws IOException, ClassNotFoundException {
+        return in.readObject();
     }
 
     /**
@@ -237,12 +277,30 @@ public class BrokerActionsForClient extends Thread {
      * @param mes Message to be sent
      */
     public void push(Object mes){
+        broker.writeToFile("[Broker]: Sending message to client...", true);
         try {
             out.writeObject(mes);
             out.flush();
-            broker.writeToFile("[Broker]: Message sent.", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        broker.writeToFile("[Broker]: Message sent.", true);
+    }
+
+    /**
+     * Send string message to client and log action to broker
+     * @param text string message to be sent
+     */
+    private void sendToClient(String text){
+        broker.writeToFile("[Broker]: Sending message to client...", true);
+        Value message = new Value("Broker"+(broker.brokerNum+1), text, false, true);
+        message.setNotification(true);
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        broker.writeToFile("[Broker]: Sent message to client: "+message, true);
     }
 }

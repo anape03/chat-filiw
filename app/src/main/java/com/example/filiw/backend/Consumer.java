@@ -3,6 +3,8 @@ package com.example.filiw.backend;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.filiw.activities.activity_show_chat;
+
 import java.io.File;
 import java.net.UnknownHostException;
 import java.io.ObjectInputStream;
@@ -40,16 +42,17 @@ public class Consumer extends Node {
      * @return message received
      */
     public String register(){
-        Log.e("CONNECTION","Register to broker.");
+        Log.e("REGISTER","Register to broker.");
+        Value response = null;
         try{
-            Value response = (Value)in.readObject();
-            return response.getMessage(); // message is in form "<change broker: yes/no> <brokernum if needed>"
+            response = (Value)in.readObject();
+            Log.e("REGISTER","Message received from broker: "+response.getMessage());
         } catch (IOException ioException) {
             ioException.printStackTrace();
         } catch (ClassNotFoundException cnfException){
             cnfException.printStackTrace();
         }
-        return "";
+        return response.getMessage();
     }
 
     /**
@@ -104,7 +107,7 @@ public class Consumer extends Node {
                     if (!mess.getNotification()){
                         Log.e("CONSUMER_MESSAGE","Message received: "+mess);
                         client.writeToFile("[Consumer]: Message received: "+mess, false);
-                        client.getActivity().receiveMessage(mess); // send message to activity
+                        ((activity_show_chat)(client.getActivity())).receiveMessage(mess); // send message to activity
                     }
                 }else{
                     Log.e("CONSUMER_ALIVE_SOCKET","Socket is not alive.");

@@ -45,11 +45,12 @@ public class Publisher extends Node {
      * @param mes Message to be sent
      */
     public synchronized void push(Value mes){
+        Log.e("PUSH","Attempting to send message \""+mes.getMessage()+"\" to broker from \""+mes.getSenter()+"\"...");
         try{
-            if (Objects.isNull(mes)){
+            if (Objects.isNull(mes)){ // empty message
                 return;
             }
-            if(mes.gethasMultimediaFile()){
+            if(mes.gethasMultimediaFile()){ // multimedia file
                 Log.e("PUSH","Multimedia file item.");
                 ArrayList<Value> chunks = chunkMultimediaFile(mes.getMessage());
                 for (Value chunk : chunks) {
@@ -57,22 +58,25 @@ public class Publisher extends Node {
                     out.flush();
                 }
             }
-            else if (mes.getMessage() != null && mes.getMessage().getBytes().length > sizeOfChunk){
+            else if (mes.getMessage() != null && mes.getMessage().getBytes().length > sizeOfChunk){ // big text
                 ArrayList<Value> chunks = chunkString(mes.getMessage());
                 for (Value chunk : chunks) {
                     out.writeObject(chunk);
                     out.flush();
+                    Log.e("PUSH","Big text message sent to broker.");
                 }
             }
-            else{
+            else{ // small text
                 out.writeObject(mes);
                 out.flush();
+                Log.e("PUSH","Small text message sent to broker.");
             }
         } catch (UnknownHostException unknownHost) {
             Log.e("CONNECTION","You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+        Log.e("PUSH","Message sent to broker.");
     }
 
     /**

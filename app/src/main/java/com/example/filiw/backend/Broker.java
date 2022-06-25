@@ -1,5 +1,7 @@
 package com.example.filiw.backend;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -86,7 +88,6 @@ public class Broker extends Node {
      */
     private void calculateKeys(){
         // Get Broker addresses
-        //ArrayList<Address> brokerList = readAddresses(); //-00
         brokerHash = new HashMap<>();
         for (Address ad : brokerList){
             brokerHash.put(ad,(ad.getIp()+ad.getPort()).hashCode());
@@ -111,7 +112,7 @@ public class Broker extends Node {
     }
 
     /**
-     * Helper method to read topic names from configuration file.
+     * Helper method to read topic names and previous messages from configuration file.
      * @return Arraylist with topic names.
      */
     private ArrayList<String> readTopics(){
@@ -123,17 +124,73 @@ public class Broker extends Node {
 //            while (confReader.hasNextLine() && line != "%") {
 //                line = confReader.nextLine();
 //            }
+//            ArrayList<Value> history = new ArrayList<>();
 //            while (confReader.hasNextLine()){
 //                line = confReader.nextLine();
-//                topics.add(line);
+//                String[] broker_topic_chat = line.split("#");
+//                if (broker_topic_chat[0].equals(Integer.valueOf(brokerNum+1))){ // only read topics for specific broker
+//                    String topic = broker_topic_chat[1];
+//                    String[] whole_messages = broker_topic_chat[2].split("%"); // each item includes sender and message
+//                    for (String item : whole_messages){
+//                        String[] sender_message = item.split(":");
+//                        String sender = sender_message[0];
+//                        String message = sender_message[1];
+//                        history.add(new Value(sender,message, false, false));
+//                        topicHistory.put(topic, history);
+//                    }
+//                }
 //            }
 //            confReader.close();
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        }
-        topics.add("Random topic1");
-        topics.add("FIIIRE");
-        topics.add("Campsite part 3");
+
+        ArrayList<Value> history;
+        String topic;
+        String sender;
+        String message;
+        switch (brokerNum+1){
+            case 1:
+
+                this.writeToFile("[Broker]: Reading Topic info for Broker1...", true);
+
+                history = new ArrayList<>();
+                topic = "campfire";
+                topicHistory.put(topic, history);
+                topics.add(topic);
+
+                break;
+            case 2:
+
+                this.writeToFile("[Broker]: Reading Topic info for Broker2...", true);
+
+                history = new ArrayList<>();
+                topic = "FIREE";
+                sender = "ham";
+                message = "this is so random tm";
+                history.add(new Value(sender,message, false, false));
+                sender = "blob";
+                message = "you like trains?";
+                history.add(new Value(sender,message, false, false));
+                sender = "i like trains";
+                message = "trains do be very cool actually, idk if you guys are aware";
+                history.add(new Value(sender,message, false, false));
+                topicHistory.put(topic, history);
+                topics.add(topic);
+
+                break;
+            case 3:
+
+                this.writeToFile("[Broker]: Reading Topic info for Broker3...", true);
+
+                history = new ArrayList<>();
+                topic = "The Umbrella Academy";
+                topicHistory.put(topic, history);
+                topics.add(topic);
+
+                break;
+        }
+
         return topics;
     }
 }

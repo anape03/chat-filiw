@@ -2,19 +2,19 @@ package com.example.filiw.backend;
 
 import android.util.Log;
 
-import com.example.filiw.activities.activity_show_chat;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.filiw.activities.activity_show_topics;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
- 
+
 public class Client extends Node {
     ArrayList<Address> brokerAddresses = null;
     Address address = null;
@@ -26,7 +26,7 @@ public class Client extends Node {
     public boolean stopthreads = false;
     public boolean Alivesocket= false;
     String desiredTopic = null;
-    activity_show_chat activity;
+    AppCompatActivity activity;
     boolean changeBroker = false;
 
     /**
@@ -41,7 +41,7 @@ public class Client extends Node {
     /**
      * Constructor for Client
      */
-    public Client(String username, String topicName, activity_show_chat activity) {
+    public Client(String username, String topicName, AppCompatActivity activity) {
         this.username = username;
         this.desiredTopic = topicName;
         this.activity = activity;
@@ -56,7 +56,7 @@ public class Client extends Node {
     public Socket getSocket(){ return requestSocket; }
     public String getdesiredTopic(){return desiredTopic; }
     public Socket getConnection(){ return requestSocket; }
-    public activity_show_chat getActivity(){ return activity; }
+    public AppCompatActivity getActivity(){ return activity; }
     public Consumer getConsumer() { return (Consumer)consumer; }
     public Publisher getPublisher() { return (Publisher)publisher; }
     public void setBrokerAddresses(ArrayList<Address> array) {
@@ -106,9 +106,6 @@ public class Client extends Node {
             
     @Override
     public void run() {
-//        Scanner sc = new Scanner(System.in);
-//        System.out.print("Choose a username: ");
-//        username = sc.nextLine();
         changeBroker = getTopicInfo();
         try {
             if (changeBroker){
@@ -134,6 +131,11 @@ public class Client extends Node {
         }
     }
 
+    /**
+     * Connecto to assigned Broker for requested topic to receive and send messages
+     * @param topicName topic requested
+     * @return client object
+     */
     public Client connectToBroker(String topicName){
         Log.e("BROKER_PING", "Is broker address reachable: "+sendPingRequest(address.getIp()));
         desiredTopic = topicName;
@@ -153,6 +155,42 @@ public class Client extends Node {
             Log.e("CONNECTION_FAIL","You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
             ioException.printStackTrace();
+        }
+        return this;
+    }
+
+    /**
+     * Connect to broker for getting topic info
+     * @return client object
+     */
+    public Client connectToBrokers(){
+        Log.e("BROKER_ADDRESSES", String.valueOf(this.brokerAddresses));
+
+        for (Address ad : this.brokerAddresses) {
+            Log.e("BROKER_PING", "Is broker address reachable: " + sendPingRequest(ad.getIp()));
+            try {
+                Log.e("CONNECTION", "Creating socket to broker: " + ad);
+                requestSocket = new Socket(ad.getIp(), ad.getPort());
+                Log.e("CONNECTION", "Request socket: " + requestSocket);
+                publisher = new Publisher(this);
+                consumer = new Consumer(this);
+                if (requestSocket != null) {
+                    Value message = new Value(this.username, "INITIALISATION_MESSAGE", false, false);
+                    ((Publisher)publisher).push(message);
+                    message = new Value(this.username, "ALL_TOPIC_INFO", false, false);
+                    ((Publisher)publisher).push(message);
+                    Log.e("TOPICS_MESSAGE", "Client sent \"ALL_TOPIC_INFO\" message to broker.");
+                    String reply = ((Consumer)consumer).register();
+                    Log.e("TOPICS_MESSAGE", "Client received topic info from broker.");
+                    ((activity_show_topics) (this.getActivity())).receiveMessage(reply);
+                    Log.e("TOPICS_MESSAGE", "Client sent topic info to activity_show_topics.");
+                }
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            this.getPublisher().exitRequest(); // exit client
+            Log.e("TOPICS_MESSAGE", "Client requested to exit broker.");
         }
         return this;
     }
@@ -181,10 +219,6 @@ public class Client extends Node {
      *         false if not
      */
     private boolean getTopicInfo(){
-//        Scanner sc = new Scanner(System.in);
-//        System.out.print("What topic would you like to access? Type Stories to see stories: ");
-//        desiredTopic = sc.nextLine().toUpperCase();
-        
         try {
             Log.e("CONNECTION", "Creating socket to broker: "+address);
             requestSocket = new Socket(address.getIp(), address.getPort());
