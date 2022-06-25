@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.VideoView;
@@ -36,6 +37,10 @@ public class ActivityCaptureVideo extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture_video);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         Button videoButton = (Button)this.findViewById(R.id.buttonCapture);
         Button SendButton = (Button)this.findViewById(R.id.buttonSendVideo);
         Button storageButton = (Button)findViewById(R.id.buttonfromStorage);
