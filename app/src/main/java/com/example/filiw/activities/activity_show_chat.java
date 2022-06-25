@@ -37,6 +37,7 @@ public class activity_show_chat extends AppCompatActivity {
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
     private final static String FILENAME = "filename";
+    private final static int RESULT_PATH = 100;
     private static String username = "";
     private static String topicName = "";
     private static String filename = "";
@@ -67,8 +68,9 @@ public class activity_show_chat extends AppCompatActivity {
 
         ///////////// For testing purposes
 //        for (int i=0; i<=10; i++){
-//            senderNames.add("Sender Name Number "+i);
-//            senderMessage.add("Test a big big very big message to see how it handles the thing Message Number "+i);
+            senderNames.add("test");
+            senderMessage.add("/storage/F220-7FC4/DCIM/Camera/20220618_112426.jpg");
+
 //        }
         /////////////
 
@@ -116,7 +118,7 @@ public class activity_show_chat extends AppCompatActivity {
         addPictureButton.setOnClickListener(v -> {
             Intent temp=new Intent(activity_show_chat.this,ActivityTakePicture.class);
             startActivity(temp);
-                });
+        });
 
 
 
@@ -139,6 +141,27 @@ public class activity_show_chat extends AppCompatActivity {
 
             }
         });
+
+        /**
+         * send multimedia file
+         */
+        Log.e("PUBLISHER in SHOW CHAT", String.valueOf(client.getPublisher() == null));
+
+        Intent intent = getIntent();
+        if (intent != null){
+            Bundle multiF = intent.getExtras();
+            if (multiF != null) {
+                if (multiF.containsKey("mediafilepath")) {
+                    String mFP = multiF.getString("mediafilepath");
+                    Log.e("MEDIAFILE PATH",mFP);
+                    if (mFP != null){
+                        TaskSendMessage getTaskSendMessage = new TaskSendMessage();
+                        getTaskSendMessage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"SEND_MESSAGE", "MULTIMEDIA", mFP);
+                    }
+                }
+            }
+        }
+
         sendMessageButton.setOnClickListener(v -> {
             Log.e("SEND_MESSAGE_BUTTON","Send message button pressed.");
             String text = this.getTextWritten();
@@ -149,6 +172,9 @@ public class activity_show_chat extends AppCompatActivity {
                 this.setTextWritten("");
             }
         });
+
+        chatList.setOnItemClickListener((adapterView, view, position, id)
+                -> multimediaFileViewer(position));
     }
 
     /**
@@ -232,6 +258,26 @@ public class activity_show_chat extends AppCompatActivity {
         }
     }
 
+    private void multimediaFileViewer(int position){
+        String item = senderMessage.get(position);
+        Log.e("SENDERMESSAGE", item);
+        String extension = "";
+        int index = item.lastIndexOf('.');
+        if(index > 0) {
+            extension = item.substring(index + 1);
+        }
+        if (extension.equals("mp4")){
+            Intent showVideo = new Intent(activity_show_chat.this, ActivityShowVideo.class);
+            showVideo.putExtra("videoPath", item);
+            startActivity(showVideo);
+        }
+        if (extension.equals("jpg") || extension.equals("jpeg")){
+            Intent showImage = new Intent(activity_show_chat.this, ActivityShowImage.class);
+            showImage.putExtra("imagePath", item);
+            startActivity(showImage);
+        }
+    }
+
     /**
      * Helper method to read IP addresses and port number for brokers
      * from configuration file.
@@ -281,50 +327,6 @@ public class activity_show_chat extends AppCompatActivity {
     public String getTextWritten(){
         return ((EditText)findViewById(R.id.show_chat_write_message)).getText().toString().trim();
     }
-
-
-    private static boolean hasPermissions(Context context, String[] permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-//    private void CaptureVideo(){
-//        if (!hasPermissions(this, PERMISSIONS)) {
-//            int PERMISSION_ALL = 1;
-//            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-//        }
-//        else {
-//            File mediaFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
-//            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//            Uri videoUri = Uri.fromFile(mediaFile);
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-//            startActivityForResult(intent, VIDEO_CAPTURE);
-//        }
-//    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Video saved to:\n" +
-                        data.getData(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Failed to record video",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-
 
     /**
      * Sets text written on screen
