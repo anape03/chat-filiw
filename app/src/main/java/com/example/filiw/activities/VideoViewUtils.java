@@ -40,7 +40,6 @@ public class VideoViewUtils {
     // @localPath = "/storage/emulated/0/DCIM/Camera/VID_20180212_195520.mp4"; (For example).
     public static void playLocalVideo(Context context, VideoView videoView, String localPath)  {
         try {
-
         } catch(Exception e) {
             Log.e(LOG_TAG, "Error Play Local Video: "+ e.getMessage());
             Toast.makeText(context,"Error Play Local Video: "+ e.getMessage(),Toast.LENGTH_SHORT).show();

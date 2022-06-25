@@ -37,11 +37,11 @@ public class ActivityTakePicture extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_picture);
-        this.imageView = (ImageView)this.findViewById(R.id.imageViewTakenPicture);
-        Button photoButton = (Button)this.findViewById(R.id.buttonTakePhoto);
-        Button backButton = (Button)this.findViewById(R.id.buttonBack);
-        Button storageButton = (Button)findViewById(R.id.buttonStorage);
-        Button cancel=(Button)findViewById(R.id.buttoncanceltakephoto);
+        this.imageView = this.findViewById(R.id.imageViewTakenPicture);
+        Button photoButton = this.findViewById(R.id.buttonTakePhoto);
+        Button backButton = this.findViewById(R.id.buttonBack);
+        Button storageButton = findViewById(R.id.buttonStorage);
+        Button cancel= findViewById(R.id.buttoncanceltakephoto);
 
         if (!hasPermissions(this, PERMISSIONS)) {
             int PERMISSION_ALL = 1;
@@ -75,9 +75,7 @@ public class ActivityTakePicture extends Activity
             startActivity(intent);
         });
 
-        cancel.setOnClickListener(v -> {
-            finish();
-        });
+        cancel.setOnClickListener(v -> finish());
     }
 
     @Override

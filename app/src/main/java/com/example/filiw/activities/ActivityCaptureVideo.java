@@ -41,10 +41,10 @@ public class ActivityCaptureVideo extends Activity
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
-        Button videoButton = (Button)this.findViewById(R.id.buttonCapture);
-        Button SendButton = (Button)this.findViewById(R.id.buttonSendVideo);
-        Button storageButton = (Button)findViewById(R.id.buttonfromStorage);
-        Button cancel=(Button)findViewById(R.id.buttoncancelvideo);
+        Button videoButton = this.findViewById(R.id.buttonCapture);
+        Button SendButton = this.findViewById(R.id.buttonSendVideo);
+        Button storageButton = findViewById(R.id.buttonfromStorage);
+        Button cancel= findViewById(R.id.buttoncancelvideo);
 
         if (!hasPermissions(this, PERMISSIONS)) {
             int PERMISSION_ALL = 1;

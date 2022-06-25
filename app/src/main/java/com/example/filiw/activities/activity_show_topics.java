@@ -31,7 +31,7 @@ public class activity_show_topics extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_topics);
-        topicList = (ListView) findViewById(R.id.show_topics_list);
+        topicList = findViewById(R.id.show_topics_list);
 
         getData(); // Get necessary values from previous activity
         listItemTopic = getTopicData();
