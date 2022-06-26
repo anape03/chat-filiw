@@ -39,7 +39,7 @@ public class ActivityTakePicture extends Activity
         setContentView(R.layout.activity_take_picture);
         this.imageView = this.findViewById(R.id.imageViewTakenPicture);
         Button photoButton = this.findViewById(R.id.buttonTakePhoto);
-        Button backButton = this.findViewById(R.id.buttonBack);
+        Button sendButton = this.findViewById(R.id.buttonSend);
         Button storageButton = findViewById(R.id.buttonStorage);
         Button cancel= findViewById(R.id.buttoncanceltakephoto);
 
@@ -58,18 +58,10 @@ public class ActivityTakePicture extends Activity
             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
             startActivityForResult(i, LOAD_IMAGE_RESULTS);
-
-//            Ayto ua mpei sto koumpi gia epilogh video apo to sotrage
-//            ACTION_PICK: Pick an item from the data, returning what was selected.
-//            Input: getData() is URI containing a directory of data (vnd.android.cursor.dir/*) from which to pick an item.
-
-//            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-//            // Start new activity with the LOAD_IMAGE_RESULTS to handle back the results when image is picked from the Image Gallery.
-//            startActivityForResult(i, LOAD_IMAGE_RESULTS);
         });
 
 
-        backButton.setOnClickListener(v -> {
+        sendButton.setOnClickListener(v -> {
             Intent intent = new Intent(ActivityTakePicture.this, activity_show_chat.class);
             intent.putExtra("mediafilepath", imagePath);
             startActivity(intent);
@@ -91,7 +83,6 @@ public class ActivityTakePicture extends Activity
         //  ------------Gia epilogh eikonas apo gallery------------
         if (requestCode == LOAD_IMAGE_RESULTS && resultCode == RESULT_OK && data != null) {
             String[] imagesPath = { MediaStore.Images.Media.DATA };
-            //String[] videosPath = { MediaStore.Video.Media.DATA };
             String imp = getMultimediaFilePath(data, imagesPath);
             imagePath = imp;
             imageView.setImageBitmap(BitmapFactory.decodeFile(imp));
@@ -107,6 +98,7 @@ public class ActivityTakePicture extends Activity
             String dateTime = simpleDateFormat.format(calendar.getTime());
             new File(imPath+"/filiw/data").mkdirs();
             FileOutputStream fos = new FileOutputStream(imPath + "/filiw/data/" + dateTime + ".jpg");
+            imagePath = imPath + "/filiw/data/" + dateTime + ".jpg";
             image.compress(Bitmap.CompressFormat.JPEG, quality, fos);
             fos.close();
         } catch (Exception e) {
