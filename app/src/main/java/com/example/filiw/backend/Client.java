@@ -90,6 +90,7 @@ public class Client extends Node {
      */
     public void sendMessage(String type, String message){
         Log.e("CLIENT_SEND","Client wants to sent message.");
+        Log.e("PUBLISHER IS NULL", String.valueOf(publisher==null));
         int status = ((Publisher)publisher).sendMessage(type,message);
         switch (status){
             case 0:

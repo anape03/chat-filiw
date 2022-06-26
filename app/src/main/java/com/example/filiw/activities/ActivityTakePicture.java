@@ -29,6 +29,8 @@ public class ActivityTakePicture extends Activity
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
     private static final int LOAD_IMAGE_RESULTS = 1;
+    private String client_name;
+    private String topic;
     private final String[] PERMISSIONS = {  Manifest.permission.CAMERA,
                                             Manifest.permission.READ_EXTERNAL_STORAGE,
                                             Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -37,6 +39,8 @@ public class ActivityTakePicture extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_picture);
+        getData();
+
         this.imageView = this.findViewById(R.id.imageViewTakenPicture);
         Button photoButton = this.findViewById(R.id.buttonTakePhoto);
         Button sendButton = this.findViewById(R.id.buttonSend);
@@ -64,6 +68,8 @@ public class ActivityTakePicture extends Activity
         sendButton.setOnClickListener(v -> {
             Intent intent = new Intent(ActivityTakePicture.this, activity_show_chat.class);
             intent.putExtra("mediafilepath", imagePath);
+            intent.putExtra("nameofperson", client_name);
+            intent.putExtra("topic_name", topic);
             startActivity(intent);
         });
 
@@ -124,5 +130,13 @@ public class ActivityTakePicture extends Activity
         @SuppressLint("Range") String imP = cursor.getString(cursor.getColumnIndex(filePath[0]));
         cursor.close();
         return imP;
+    }
+
+    private void getData(){
+        Bundle bundle = getIntent().getExtras();
+        if (bundle == null)
+            return;
+        client_name = bundle.getString("nameofperson");
+        topic = bundle.getString("topic_name");
     }
 }

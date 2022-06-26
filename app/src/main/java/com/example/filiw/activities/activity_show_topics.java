@@ -97,7 +97,6 @@ public class activity_show_topics extends AppCompatActivity {
             String topic_name = topic_message[0];
             String last_message = topic_message.length > 1 ? topic_message[1] : "";
 
-            // TODO: check if topic already exist, keep not empty
             int index = inListItemTopic(topic_name);
             if (index != -1){ // if topic already found in list
                 if (listItemTopic.get(index).getLastMessage().equals("")) { // if previous entry had no messages

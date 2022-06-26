@@ -11,7 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import androidx.core.app.ActivityCompat;
@@ -23,7 +26,6 @@ public class ActivityCaptureVideo extends Activity
     static final int  REQUEST_TAKE_GALLERY_VIDEO = 1;
     static final int REQUEST_VIDEO_CAPTURE = 1;
     private String videoPath = "";
-    private VideoView videoView;
     private static final int LOAD_IMAGE_RESULTS = 1;
     private final String[] PERMISSIONS = {  Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -59,10 +61,8 @@ public class ActivityCaptureVideo extends Activity
         });
 
         storageButton.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("video/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent,"Select Video"),REQUEST_TAKE_GALLERY_VIDEO);
+            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, REQUEST_TAKE_GALLERY_VIDEO);
         });
 
 
@@ -79,23 +79,20 @@ public class ActivityCaptureVideo extends Activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
-            videoView.setVideoURI(videoUri);
+            videoPath = videoUri.toString();
+            Log.e("VIDEO PATH CAMERA", videoPath);
         }
 
 
         //  ------------CHOSE VIDEO FROM  gallery------------
-        if (requestCode == LOAD_IMAGE_RESULTS && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();
 //            // OI FILE Manager
 //            String filemanagerstring = selectedImageUri.getPath();
             // MEDIA GALLERY
             String selectedImagePath = getPath(selectedImageUri);
-            if (selectedImagePath != null) {
-                Intent intent = new Intent(ActivityCaptureVideo.this,
-                        activity_show_chat.class);
-                intent.putExtra("path", selectedImagePath);
-                startActivity(intent);
-            }
+            Log.e("VIDEO PATH GALLERY", selectedImagePath);
+            videoPath = selectedImagePath;
         }
     }
 

@@ -41,9 +41,9 @@ public class Node extends Thread {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        addresses.add(new Address("192.168.2.5", 6000)); //-0
-        addresses.add(new Address("192.168.2.5", 7000)); //-0
-        addresses.add(new Address("192.168.2.5", 8000)); //-0
+        addresses.add(new Address("192.168.1.11", 6000)); //-0
+        addresses.add(new Address("192.168.1.11", 7000)); //-0
+        addresses.add(new Address("192.168.1.11", 8000)); //-0
         return addresses;
     }
 
@@ -53,13 +53,13 @@ public class Node extends Thread {
      * @return FileWriter object
      */
     protected FileWriter createLogFile(String name){ 
-        try {
-            logFile = new FileWriter(name, false);
-            output = new BufferedWriter(logFile);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            logFile = new FileWriter(name, false);
+//            output = new BufferedWriter(logFile);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return logFile;
     }
 

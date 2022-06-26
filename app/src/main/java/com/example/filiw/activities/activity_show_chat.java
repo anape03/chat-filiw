@@ -23,6 +23,7 @@ import com.example.filiw.backend.Client;
 import com.example.filiw.backend.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,10 +34,8 @@ public class activity_show_chat extends AppCompatActivity {
     private final static int TOTAL_BROKERS = 3;
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
-    private final static String FILENAME = "filename";
     private static String username = "";
     private static String topicName = "";
-    private static String filename = "";
 
     ListView chatList;
     private static List<String> senderNames = new ArrayList<>();
@@ -99,13 +98,21 @@ public class activity_show_chat extends AppCompatActivity {
 
         addVideoButton.setOnClickListener(v -> {
             Intent temp=new Intent(activity_show_chat.this,ActivityCaptureVideo.class);
+            temp.putExtra(USERNAME, username);
+            temp.putExtra(TOPIC_NAME, topicName);
+            //exitClient();
             startActivity(temp);
+            finish();
         });
 
 
         addPictureButton.setOnClickListener(v -> {
             Intent temp=new Intent(activity_show_chat.this,ActivityTakePicture.class);
+            temp.putExtra(USERNAME, username);
+            temp.putExtra(TOPIC_NAME, topicName);
+            //exitClient();
             startActivity(temp);
+            finish();
         });
 
 
@@ -142,6 +149,8 @@ public class activity_show_chat extends AppCompatActivity {
                 if (multiF.containsKey("mediafilepath")) {
                     String mFP = multiF.getString("mediafilepath");
                     Log.e("MEDIAFILE PATH",mFP);
+                    File a = new File(mFP);
+                    Log.e("FILE_EXISTS", String.valueOf(a.exists()));
                     if (mFP != null){
                         TaskSendMessage getTaskSendMessage = new TaskSendMessage();
                         getTaskSendMessage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"SEND_MESSAGE", "MULTIMEDIA", mFP);
@@ -165,9 +174,11 @@ public class activity_show_chat extends AppCompatActivity {
                 -> multimediaFileViewer(position));
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         exitClient();
+        //finish();
     }
 
     @Override
@@ -344,23 +355,10 @@ public class activity_show_chat extends AppCompatActivity {
             return;
         String topicName = bundle.getString(TOPIC_NAME);
         String username = bundle.getString(USERNAME);
-        String file_name = bundle.getString(FILENAME);
 
         setTopicName(topicName);
         setUsername(username);
-        setFilename(file_name);
-    }
 
-    /**
-     * Get filename (to be uploaded) from other activity
-     * and set it to filename variable
-     */
-    private void getFilename(){
-        Bundle bundle = getIntent().getExtras();
-        if (bundle == null)
-            return;
-        String file_name = bundle.getString(FILENAME);
-        setFilename(file_name);
     }
 
     /**
@@ -380,11 +378,4 @@ public class activity_show_chat extends AppCompatActivity {
         username = value;
     }
 
-    /**
-     * Set filename variable
-     * @param value username
-     */
-    private void setFilename(String value){
-        filename = value;
-    }
 }
