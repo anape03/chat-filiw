@@ -1,8 +1,6 @@
 package com.example.filiw.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,10 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.example.filiw.R;
 import com.example.filiw.adapters.CustomAdapterChat;
@@ -33,11 +29,9 @@ import java.util.Properties;
 
 public class activity_show_chat extends AppCompatActivity {
     private final static int TOTAL_BROKERS = 3;
-    static final int VIDEO_CAPTURE = 1;
     private final static String TOPIC_NAME = "topic_name";
     private final static String USERNAME = "nameofperson";
     private final static String FILENAME = "filename";
-    private final static int RESULT_PATH = 100;
     private static String username = "";
     private static String topicName = "";
     private static String filename = "";

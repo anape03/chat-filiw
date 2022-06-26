@@ -2,9 +2,7 @@ package com.example.filiw.activities;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -14,13 +12,11 @@ import com.example.filiw.R;
 
 public class ActivityShowImage extends AppCompatActivity {
 
-    private ImageView imageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_image);
-        this.imageView = this.findViewById(R.id.imageViewDownPicture);
+        ImageView imageView = this.findViewById(R.id.imageViewDownPicture);
         Button backButton = this.findViewById(R.id.buttonBackChact);
 
         Intent intent = getIntent();
@@ -36,7 +32,7 @@ public class ActivityShowImage extends AppCompatActivity {
             }
         }
 
-        backButton.setOnClickListener(v -> {finish();});
+        backButton.setOnClickListener(v -> finish());
     }
 
 }
