@@ -55,6 +55,11 @@
             android:name=".activities.ActivityCaptureVideo"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name=".activities.ActivityShowVideo"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

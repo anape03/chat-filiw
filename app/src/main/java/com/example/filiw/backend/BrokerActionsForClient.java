@@ -1,5 +1,6 @@
 package com.example.filiw.backend;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,46 +38,47 @@ public class BrokerActionsForClient extends Thread {
      * Handles first connection with the Client
      * @return type of connection "ALL_TOPICS_INFO", "TOPIC_CONNECT"
      */
-    private String firstConnect(){
+    private String firstConnect() {
         try {
-            Value receivedMes = (Value)in.readObject();
+            Value receivedMes = (Value) in.readObject();
             String clientName = receivedMes.getSenter();
             String messageFromClient = receivedMes.getMessage();
-            if (messageFromClient.equals("INITIALISATION_MESSAGE")){
-                broker.writeToFile("[Broker]: Client \""+clientName+"\" sent initialisation message.",true);
-                receivedMes = (Value)in.readObject();
+            if (messageFromClient.equals("INITIALISATION_MESSAGE")) {
+                broker.writeToFile("[Broker]: Client \"" + clientName + "\" sent initialisation message.", true);
+                receivedMes = (Value) in.readObject();
                 clientName = receivedMes.getSenter();
                 messageFromClient = receivedMes.getMessage();
             }
-            broker.writeToFile("[Broker]: Received message from \""+clientName+"\": "+messageFromClient,true);
-            if (messageFromClient.equals("ALL_TOPIC_INFO")){
-                broker.writeToFile("[Broker]: Client \""+clientName+"\" requests all topic info.",true);
+            broker.writeToFile("[Broker]: Received message from \"" + clientName + "\": " + messageFromClient, true);
+            if (messageFromClient.equals("ALL_TOPIC_INFO")) {
+                broker.writeToFile("[Broker]: Client \"" + clientName + "\" requests all topic info.", true);
                 String all_topic_info = getAllTopicInfo();
                 sendToClient(all_topic_info);
-                broker.writeToFile("[Broker]: Topic info sent to \""+clientName+"\".",true);
+                broker.writeToFile("[Broker]: Topic info sent to \"" + clientName + "\".", true);
                 return "ALL_TOPICS_INFO";
             }
             desiredTopic = messageFromClient;
-            broker.writeToFile("[Broker]: Client requests to connect to topic \""+desiredTopic+"\"", true);
+            broker.writeToFile("[Broker]: Client requests to connect to topic \"" + desiredTopic + "\"", true);
             int manager = managerBroker(desiredTopic);
-            broker.activeClients.put(receivedMes.getSenter(),this);
+            broker.activeClients.put(receivedMes.getSenter(), this);
 
-            if (manager != broker.brokerNum){   // Client must change Broker
+            if (manager != broker.brokerNum) {   // Client must change Broker
                 broker.writeToFile("[Broker]: Client must change broker.", true);
-                sendToClient("yes "+manager);
+                sendToClient("yes " + manager);
                 return "TOPIC_CONNECT";
-            } else{                             // Client doesn't change Broker
+            } else {                             // Client doesn't change Broker
                 boolean topicalreadyin = broker.registerdTopicClients.containsKey(desiredTopic);
-                if (!topicalreadyin){
+                if (!topicalreadyin) {
                     broker.registerdTopicClients.put(desiredTopic, new ArrayList<>());
-                } else{
+                } else {
                     broker.writeToFile("[Broker]: Topic \"" + desiredTopic + "\" already exists.", true);
                 }
                 broker.registerdTopicClients.get(desiredTopic).add(receivedMes.getSenter());
             }
             sendToClient("no");
-            
-        } catch (IOException e) {
+
+        } catch (SocketException socketException){
+        }catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
@@ -217,11 +219,9 @@ public class BrokerActionsForClient extends Thread {
 
             }
 
-        } catch (SocketException socketException){
-        }catch (ClassNotFoundException classNFException) {
-            classNFException.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (SocketException | EOFException exc){
+        } catch (ClassNotFoundException | IOException exc) {
+            exc.printStackTrace();
         }
     }
 

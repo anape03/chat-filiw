@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,14 +61,6 @@ public class activity_show_chat extends AppCompatActivity {
 
         TaskConnectToBroker getTaskConnectToBroker = new TaskConnectToBroker();
         getTaskConnectToBroker.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"CONNECT_TO_BROKER");
-
-        ///////////// For testing purposes
-//        for (int i=0; i<=10; i++){
-            senderNames.add("test");
-            senderMessage.add("/storage/F220-7FC4/DCIM/Camera/20220618_112426.jpg");
-
-//        }
-        /////////////
 
         //Create buttons
 
@@ -171,6 +165,16 @@ public class activity_show_chat extends AppCompatActivity {
                 -> multimediaFileViewer(position));
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        exitClient();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitClient();
+    }
+
     /**
      * Set up client object
      */
@@ -183,12 +187,12 @@ public class activity_show_chat extends AppCompatActivity {
     /**
      * Client wants to exit
      */
-    private void exitClient(){ // TODO also exit client when back button pressed
+    private void exitClient(){
         TaskExitClient getTaskExitClient = new TaskExitClient();
         getTaskExitClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"EXIT_CLIENT");
         senderNames.clear();
         senderMessage.clear();
-        finish();
+        startActivity(new Intent(this, activity_show_topics.class));
     }
 
     private class TaskConnectToBroker extends AsyncTask<String, String, Client> {
